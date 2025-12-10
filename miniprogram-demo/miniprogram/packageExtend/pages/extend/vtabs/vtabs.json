@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "mp-vtabs": "../../../components/vtabs/vtabs",
+    "mp-vtabs-content": "../../../components/vtabs-content/vtabs-content"
+  },
+  "renderer": "webview",
+"navigationBarTitleText": "vtabs"
+
+}

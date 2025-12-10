@@ -1,0 +1,6 @@
+{
+  "usingComponents": {},
+  "disableScroll": true,
+  "renderer": "webview",
+"navigationBarTitleText": "实时手势检测"
+}

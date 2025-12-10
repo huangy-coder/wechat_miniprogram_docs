@@ -1,0 +1,9 @@
+{
+  "disableScroll": true,
+
+  "renderer": "webview",
+"navigationBarTitleText": "select-text",
+  "usingComponents": {
+    "mp-select-text": "../../../components/select-text/select-text"
+  }
+}

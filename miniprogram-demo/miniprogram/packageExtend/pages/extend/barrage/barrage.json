@@ -1,0 +1,9 @@
+{
+  "disableScroll": true,
+
+  "renderer": "webview",
+"navigationBarTitleText": "barrage",
+  "usingComponents": {
+    "barrage": "miniprogram-barrage"
+  }
+}

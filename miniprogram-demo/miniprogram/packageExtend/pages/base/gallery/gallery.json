@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+		"mp-navigation-bar": "weui-miniprogram/navigation-bar/navigation-bar",
+		"mp-gallery": "weui-miniprogram/gallery/gallery"
+  },
+	"navigationStyle": "custom",
+  "renderer": "skyline"
+}

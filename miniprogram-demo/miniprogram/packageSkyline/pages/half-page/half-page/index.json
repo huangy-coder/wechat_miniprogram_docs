@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "page-scroll": "/components/page-scroll/index"
+  },
+  "disableScroll": true,
+  "navigationStyle": "custom"
+}
