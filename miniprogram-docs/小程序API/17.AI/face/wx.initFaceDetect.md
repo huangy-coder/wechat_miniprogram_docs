@@ -1,0 +1,32 @@
+# wx.initFaceDetect(Object object)
+
+> 官方文档：[wx.initFaceDetect(Object object)](https://developers.weixin.qq.com/miniprogram/dev/api/ai/face/wx.initFaceDetect.html)
+> 所属分类：[AI](../AI目录.md)
+> 导航路径：AI / 人脸检测 / wx.initFaceDetect
+> 整理日期：2026-06-01
+> 本地化说明：正文按官方 API 页面结构转换为 Markdown，保留参数、返回值、回调、错误码、版本限制、注意事项和示例等开发信息。
+
+该接口已停止维护，推荐使用 [wx.createVKSession](../visionkit/wx.createVKSession.md) 代替
+
+> 基础库 2.18.0 开始支持，低版本需做[兼容处理](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html)。
+
+> **以 [Promise 风格](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/api.html#异步-API-返回-Promise) 调用**：不支持
+> **小程序插件**：支持，需要小程序基础库版本不低于 [2.21.3](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html)
+
+## 功能描述
+
+初始化人脸检测。本接口不再维护，请使用 [wx.createVKSession](../visionkit/wx.createVKSession.md) 接口代替。详情参考[人脸检测指南文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/visionkit/face.html)
+
+## 参数
+
+### Object object
+
+| 属性 | 类型 | 默认值 | 必填 | 说明 |
+| --- | --- | --- | --- | --- |
+| success | function |   | 否 | 接口调用成功的回调函数 |
+| fail | function |   | 否 | 接口调用失败的回调函数 |
+| complete | function |   | 否 | 接口调用结束的回调函数（调用成功、失败都会执行） |
+
+### 特别说明
+
+若小程序人脸识别功能涉及采集、存储用户生物特征（如人脸照片或视频、身份证和手持身份证、身份证照和免冠照等），此类型服务需使用[微信原生人脸识别接口](https://developers.weixin.qq.com/community/develop/doc/000442d352c1202bd498ecb105c00d?highline=%E4%BA%BA%E8%84%B8%E6%A0%B8%E8%BA%AB)。

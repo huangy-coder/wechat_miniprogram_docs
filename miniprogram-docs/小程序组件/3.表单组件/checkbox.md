@@ -39,7 +39,7 @@
         <checkbox value="cb" />未选中
       </label>
     </view>
-  
+
     <view class="page-section">
       <view class="page-section-title">推荐展示样式</view>
       <view class="weui-cells weui-cells_after-title">
@@ -54,7 +54,7 @@
       </view>
     </view>
   </view>
-  
+
 </view>
 ```
 

@@ -121,7 +121,7 @@ Page({
     console.error(e.detail.errMsg)
   },
   onReady: function (e) {
-    
+
     var context = wx.createCanvasContext('firstCanvas')
 
     context.setStrokeStyle("#00ff00")

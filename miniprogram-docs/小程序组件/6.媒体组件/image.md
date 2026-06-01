@@ -14,8 +14,8 @@
 
 图片。支持 JPG、PNG、SVG、WEBP、GIF 等格式，[2.3.0](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) 起支持云文件ID。
 
-1. 使用 svg 格式且 mode=scaleToFill 时，WebView 会居中（除非 svg 里加上 preserveAspectRatio="none"），Skyline 则会撑满 
-2. svg 格式不支持百分比单位 
+1. 使用 svg 格式且 mode=scaleToFill 时，WebView 会居中（除非 svg 里加上 preserveAspectRatio="none"），Skyline 则会撑满
+2. svg 格式不支持百分比单位
 3. svg 格式不支持 <style> element
 
 ## 通用属性

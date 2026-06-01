@@ -3,9 +3,9 @@
 > 基础库 1.0.0 开始支持，低版本需做[兼容处理](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html)。
 
 > **微信 Windows 版**：支持
-> 
+>
 > **微信 Mac 版**：支持
-> 
+>
 > **微信 鸿蒙 OS 版**：支持
 
 > 相关文档: [wx.createMapContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/wx.createMapContext.html)
@@ -146,7 +146,7 @@ const setting = {
 }
 
 this.setData({
-  
+
   setting: {
     enable3D: true,
     enableTraffic: true

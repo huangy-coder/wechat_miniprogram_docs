@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "navigation-bar": "../../components/navigation-bar/index",
+    "album": "../../components/album/index"
+  },
+  "disableScroll": true,
+  "navigationStyle": "custom"
+}

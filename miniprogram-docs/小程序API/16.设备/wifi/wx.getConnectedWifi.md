@@ -1,0 +1,60 @@
+# wx.getConnectedWifi(Object object)
+
+> 官方文档：[wx.getConnectedWifi(Object object)](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.getConnectedWifi.html)
+> 所属分类：[设备](../设备目录.md)
+> 导航路径：设备 / Wi-Fi / wx.getConnectedWifi
+> 整理日期：2026-06-01
+> 本地化说明：正文按官方 API 页面结构转换为 Markdown，保留参数、返回值、回调、错误码、版本限制、注意事项和示例等开发信息。
+
+> 基础库 1.6.0 开始支持，低版本需做[兼容处理](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html)。
+
+> **以 [Promise 风格](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/api.html#%E5%BC%82%E6%AD%A5-API-%E8%BF%94%E5%9B%9E-Promise) 调用**：支持
+> **小程序插件**：支持，需要小程序基础库版本不低于 [2.9.1](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html)
+> **微信 鸿蒙 OS 版**：支持
+
+> 相关文档: [无线局域网 (Wi-Fi)](https://developers.weixin.qq.com/miniprogram/dev/framework/device/wifi.html)
+
+## 功能描述
+
+获取已连接中的 Wi-Fi 信息。
+
+## 参数
+
+### Object object
+
+| 属性 | 类型 | 默认值 | 必填 | 说明 | 最低版本 |
+| --- | --- | --- | --- | --- | --- |
+| partialInfo | boolean | false | 否 | 是否需要返回部分 Wi-Fi 信息 | [2.22.0](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
+| success | function |   | 否 | 接口调用成功的回调函数 |   |
+| fail | function |   | 否 | 接口调用失败的回调函数 |   |
+| complete | function |   | 否 | 接口调用结束的回调函数（调用成功、失败都会执行） |   |
+
+#### object.success 回调函数
+
+##### 参数
+
+###### Object res
+
+| 属性 | 类型 | 说明 |
+| --- | --- | --- |
+| wifi | [WifiInfo](WifiInfo.md) | Wi-Fi 信息 |
+
+## 错误
+
+| 错误码 | 错误信息 | 说明 |
+| --- | --- | --- |
+| 0 | ok | 正常 |
+| 12000 | not init | 未先调用 `startWifi` 接口 |
+| 12001 | system not support | 当前系统不支持相关能力 |
+| 12002 | password error Wi-Fi | 密码错误 |
+| 12003 | connection timeout | 连接超时, 仅 Android 支持 |
+| 12004 | duplicate request | 重复连接 Wi-Fi |
+| 12005 | wifi not turned on | Android 特有，未打开 Wi-Fi 开关 |
+| 12006 | gps not turned on | Android 特有，未打开 GPS 定位开关 |
+| 12007 | user denied | 用户拒绝授权链接 Wi-Fi |
+| 12008 | invalid SSID | 无效 SSID |
+| 12009 | system config err | 系统运营商配置拒绝连接 Wi-Fi |
+| 12010 | system internal error | 系统其他错误，需要在 errmsg 打印具体的错误原因 |
+| 12011 | weapp in background | 应用在后台无法配置 Wi-Fi |
+| 12013 | wifi config may be expired | 系统保存的 Wi-Fi 配置过期，建议忘记 Wi-Fi 后重试，仅 Android 支持 |
+| 12014 | invalid WEP / WPA password | iOS 特有，无效的 WEP / WPA 密码 |

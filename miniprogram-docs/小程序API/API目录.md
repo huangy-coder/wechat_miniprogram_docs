@@ -1,1065 +1,1724 @@
-# 微信开放文档 / API
-
-> 以下服务端接口可免 access_token 调用的场景：使用[微信云托管](https://developers.weixin.qq.com/miniprogram/dev/wxcloudrun/src/basic/intro.html)通过[微信令牌/开放接口服务](https://developers.weixin.qq.com/miniprogram/dev/wxcloudrun/src/guide/weixin/token.html)调用；使用[微信云开发](https://developers.weixin.qq.com/miniprogram/dev/wxcloud/basis/getting-started.html)通过云函数免服务器发起[云调用](https://developers.weixin.qq.com/miniprogram/dev/wxcloud/guide/openapi/openapi.html)。  
-
-## 基础
-
-|                                                       API                                                       | 功能                            |
-| :-------------------------------------------------------------------------------------------------------------: | ----------------------------- |
-|                 [wx.env](https://developers.weixin.qq.com/miniprogram/dev/api/base/wx.env.html)                 | 环境变量                          |
-|             [wx.canIUse](https://developers.weixin.qq.com/miniprogram/dev/api/base/wx.canIUse.html)             | 判断小程序的API，回调，参数，组件等是否在当前版本可用  |
-| [wx.base64ToArrayBuffer](https://developers.weixin.qq.com/miniprogram/dev/api/base/wx.base64ToArrayBuffer.html) | 将 Base64 字符串转成 ArrayBuffer 对象 |
-| [wx.arrayBufferToBase64](https://developers.weixin.qq.com/miniprogram/dev/api/base/wx.arrayBufferToBase64.html) | 将 ArrayBuffer 对象转成 Base64 字符串 |
-
-### 系统
-
-| API                                                                                                                                  | 功能                                                                                                                            |
-| ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| [wx.openSystemBluetoothSetting](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.openSystemBluetoothSetting.html) | 跳转系统蓝牙设置页                                                                                                                     |
-| [wx.openAppAuthorizeSetting](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.openAppAuthorizeSetting.html)       | 跳转系统微信授权管理页                                                                                                                   |
-| [wx.getWindowInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getWindowInfo.html)                           | 获取窗口信息                                                                                                                        |
-| [wx.getSystemSetting](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSystemSetting.html)                     | 获取设备设置                                                                                                                        |
-| [wx.getSystemInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSystemInfoSync.html)                   | [wx.getSystemInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSystemInfo.html) 的同步版本              |
-| [wx.getSystemInfoAsync](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSystemInfoAsync.html)                 | 异步获取系统信息                                                                                                                      |
-| [wx.getSystemInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSystemInfo.html)                           | 获取系统信息                                                                                                                        |
-| [wx.getSkylineInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSkylineInfoSync.html)                 | 获取当前运行环境对于 [Skyline 渲染引擎](https://developers.weixin.qq.com/miniprogram/dev/framework/runtime/skyline/introduction.html) 的支持情况 |
-| [wx.getSkylineInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSkylineInfo.html)                         | 获取当前运行环境对于 [Skyline 渲染引擎](https://developers.weixin.qq.com/miniprogram/dev/framework/runtime/skyline/introduction.html) 的支持情况 |
-| [wx.getRendererUserAgent](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getRendererUserAgent.html)             | 获取 Webview 小程序的 UserAgent                                                                                                     |
-| [wx.getDeviceInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getDeviceInfo.html)                           | 获取设备基础信息                                                                                                                      |
-| [wx.getDeviceBenchmarkInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getDeviceBenchmarkInfo.html)         | 获取设备性能得分和机型档位数据                                                                                                               |
-| [wx.getAppBaseInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getAppBaseInfo.html)                         | 获取微信APP基础信息                                                                                                                   |
-| [wx.getAppAuthorizeSetting](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getAppAuthorizeSetting.html)<br>     | 获取微信APP授权设置                                                                                                                   |
-### 更新
-
-| API                                                                                                                                    | 功能                                                                                                                                                                                                                                                                                  |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.updateWeChatApp](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/wx.updateWeChatApp.html)                         | 更新客户端版本                                                                                                                                                                                                                                                                             |
-| [wx.getUpdateManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/wx.getUpdateManager.html)                       | 获取**全局唯一**的版本更新管理器，用于管理小程序更新[UpdateManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/UpdateManager.html)UpdateManager 对象，用来管理更新，可通过 [wx.getUpdateManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/wx.getUpdateManager.html) 接口获取实例 |
-| [UpdateManager.applyUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/UpdateManager.applyUpdate.html)           | 强制小程序重启并使用新版本                                                                                                                                                                                                                                                                       |
-| [UpdateManager.onCheckForUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/UpdateManager.onCheckForUpdate.html) | 监听向微信后台请求检查更新结果事件                                                                                                                                                                                                                                                                   |
-| [UpdateManager.onUpdateFailed](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/UpdateManager.onUpdateFailed.html)     | 监听小程序更新失败事件                                                                                                                                                                                                                                                                         |
-| [UpdateManager.onUpdateReady](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/UpdateManager.onUpdateReady.html)       | 监听小程序有版本更新事件<br>                                                                                                                                                                                                                                                                    |
-
-### 生命周期
-
-| API                                                                                                                              | 功能                 |
-| -------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| [wx.onApiCategoryChange](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.onApiCategoryChange.html)   | 监听 API 类别变化事件      |
-| [wx.offApiCategoryChange](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.offApiCategoryChange.html) | 移除 API 类别变化事件的监听函数 |
-| [wx.getLaunchOptionsSync](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.getLaunchOptionsSync.html) | 获取小程序启动时的参数        |
-| [wx.getEnterOptionsSync](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.getEnterOptionsSync.html)   | 获取本次小程序启动时的参数      |
-| [wx.getApiCategory](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.getApiCategory.html)             | 获取当前 API 类别        |
-
-### 应用级事件
-
-| API                                                                                                                                                     | 功能                                                                                                                                                                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.postMessageToReferrerPage](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.postMessageToReferrerPage.html)               | 向跳转的源页面发送消息                                                                                                                                                                                                                                               |
-| [wx.postMessageToReferrerMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.postMessageToReferrerMiniProgram.html) | 向跳转的源小程序发送消息，源小程序可在 [wx.onShow](https://developers.weixin.qq.com/miniprogram/dev/api/errorwx.onShow)) 或 [wx.getEnterOptionsSync](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.getEnterOptionsSync.html) 中通过 extraData 接收消息 |
-| [wx.onUnhandledRejection](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onUnhandledRejection.html)                         | 监听未处理的 Promise 拒绝事件                                                                                                                                                                                                                                       |
-| [wx.onPageNotFound](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onPageNotFound.html)                                     | 监听小程序要打开的页面不存在事件                                                                                                                                                                                                                                          |
-| [wx.onThemeChange](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onThemeChange.html)                                       | 监听系统主题改变事件                                                                                                                                                                                                                                                |
-| [wx.onLazyLoadError](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onLazyLoadError.html)                                   | 监听小程序异步组件加载失败事件                                                                                                                                                                                                                                           |
-| [wx.onError](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onError.html)                                                   | 监听小程序错误事件                                                                                                                                                                                                                                                 |
-| [wx.onAudioInterruptionEnd](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onAudioInterruptionEnd.html)                     | 监听音频中断结束事件                                                                                                                                                                                                                                                |
-| [wx.onAudioInterruptionBegin](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onAudioInterruptionBegin.html)                 | 监听音频因为受到系统占用而被中断开始事件                                                                                                                                                                                                                                      |
-| [wx.onAppShow](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onAppShow.html)                                               | 监听小程序切前台事件                                                                                                                                                                                                                                                |
-| [wx.onAppHide](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onAppHide.html)                                               | 监听小程序切后台事件                                                                                                                                                                                                                                                |
-| [wx.offUnhandledRejection](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offUnhandledRejection.html)                       | 移除未处理的 Promise 拒绝事件的监听函数                                                                                                                                                                                                                                  |
-| [wx.offThemeChange](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offThemeChange.html)                                     | 移除系统主题改变事件的监听函数                                                                                                                                                                                                                                           |
-| [wx.offPageNotFound](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offPageNotFound.html)                                   | 移除小程序要打开的页面不存在事件的监听函数                                                                                                                                                                                                                                     |
-| [wx.offLazyLoadError](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offLazyLoadError.html)                                 | 移除小程序异步组件加载失败事件的监听函数                                                                                                                                                                                                                                      |
-| [wx.offError](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offError.html)                                                 | 移除小程序错误事件的监听函数                                                                                                                                                                                                                                            |
-| [wx.offAudioInterruptionEnd](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offAudioInterruptionEnd.html)                   | 移除音频中断结束事件的监听函数                                                                                                                                                                                                                                           |
-| [wx.offAudioInterruptionBegin](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offAudioInterruptionBegin.html)               | 移除音频因为受到系统占用而被中断开始事件的监听函数                                                                                                                                                                                                                                 |
-| [wx.offAppShow](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offAppShow.html)                                             | 移除小程序切前台事件的监听函数                                                                                                                                                                                                                                           |
-| [wx.offAppHide](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offAppHide.html)                                             | 移除小程序切后台事件的监听函数                                                                                                                                                                                                                                           |
-
-
-### 路由事件
-
-| API                                                                                                                                                                                                                                                                   | 功能                                                                                                                                           |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.onBeforePageUnload](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onBeforePageUnload.html)                                                                                                                                           | 监听路由事件引起现有页面实例销毁时，页面实例销毁前的事件监听，详见 [页面路由监听](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/route-event-listener.html) |
-| [wx.onBeforePageLoad](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onBeforePageLoad.html)                                                                                                                                               | 监听路由事件引起新的页面实例化时，页面实例化前的事件监听，详见 [页面路由监听](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/route-event-listener.html)   |
-| [wx.onBeforeAppRoute](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onBeforeAppRoute.html)                                                                                                                                               | 监听路由事件下发后，执行路由逻辑前的事件监听，详见 [页面路由监听](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/route-event-listener.html)         |
-| [wx.onAppRouteDone](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onAppRouteDone.html)监听当前路由动画执行完成的事件监听，详见 [页面路由监听](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/route-event-listener.html)                    |                                                                                                                                              |
-| [wx.onAppRoute](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onAppRoute.html)监听路由事件下发后，执行路由逻辑后的事件监听，详见 [页面路由监听](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/route-event-listener.html)                       |                                                                                                                                              |
-| [wx.onAfterPageUnload](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onAfterPageUnload.html)监听路由事件引起现有页面实例销毁时，页面实例销毁后的事件监听，详见 [页面路由监听](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/route-event-listener.html) |                                                                                                                                              |
-| [wx.onAfterPageLoad](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onAfterPageLoad.html)监听路由事件引起新的页面实例化时，页面实例化完成的事件监听，详见 [页面路由监听](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/route-event-listener.html)      |                                                                                                                                              |
-| [wx.offBeforePageUnload](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offBeforePageUnload.html)移除路由事件的监听函数                                                                                                                              |                                                                                                                                              |
-| [wx.offBeforePageLoad](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offBeforePageLoad.html)移除路由事件的监听函数                                                                                                                                  |                                                                                                                                              |
-| [wx.offBeforeAppRoute](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offBeforeAppRoute.html)移除路由事件的监听函数                                                                                                                                  |                                                                                                                                              |
-| [wx.offAppRouteDone](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offAppRouteDone.html)移除当前路由动画执行完成的事件的监听函数                                                                                                                             |                                                                                                                                              |
-| [wx.offAppRoute](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offAppRoute.html)移除路由事件的监听函数                                                                                                                                              |                                                                                                                                              |
-| [wx.offAfterPageUnload](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offAfterPageUnload.html)移除路由事件的监听函数                                                                                                                                |                                                                                                                                              |
-| [wx.offAfterPageLoad](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offAfterPageLoad.html)移除路由事件的监听函数                                                                                                                                    |                                                                                                                                              |
-
-### 调试
-
-| API                                                                                                                       | 功能                                                                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.setEnableDebug](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/wx.setEnableDebug.html)               | 设置是否打开调试开关                                                                                                                                                |
-| [wx.getRealtimeLogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/wx.getRealtimeLogManager.html) | 获取实时日志管理器对象                                                                                                                                               |
-| [wx.getLogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/wx.getLogManager.html)                 | 获取日志管理器对象                                                                                                                                                 |
-| [console](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/console.html)                                   | 向调试面板中打印日志                                                                                                                                                |
-| [LogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/LogManager.html)                             | 日志管理器实例，可以通过 [wx.getLogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/wx.getLogManager.html) 获取                                 |
-| [RealtimeLogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeLogManager.html)             | 实时日志管理器实例，可以通过 [wx.getRealtimeLogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/wx.getRealtimeLogManager.html) 获取               |
-| [RealtimeTagLogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeTagLogManager.html)       | 给定标签的实时日志管理器实例，可以通过 [RealtimeLogManager.tag](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeLogManager.tag.html) 接口获取，目前只支持在插件使用 |
-
-
-### 性能
-| API                                                                                                                         | 功能                                                                                                                       |
-| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| [wx.requestIdleCallback](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.requestIdleCallback.html) | 注册一个函数，将在空闲时期被调用                                                                                                         |
-| [wx.reportPerformance](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.reportPerformance.html)     | 小程序测速上报                                                                                                                  |
-| [wx.preloadWebview](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.preloadWebview.html)           | 预加载下个页面的 WebView                                                                                                         |
-| [wx.preloadSkylineView](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.preloadSkylineView.html)   | 预加载下个页面所需要的 [Skyline](https://developers.weixin.qq.com/miniprogram/dev/framework/runtime/skyline/introduction.html) 运行环境 |
-| [wx.preloadAssets](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.preloadAssets.html)             | 为视图层预加载媒体资源文件, 目前支持：font，image                                                                                           |
-| [wx.getPerformance](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.getPerformance.html)           | 获取当前小程序性能相关的信息                                                                                                           |
-| [wx.cancelIdleCallback](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.cancelIdleCallback.html)   | 取消之前注册的指定回调函数                                                                                                            |
-| [EntryList](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/EntryList.html)                           | EntryList 对象                                                                                                             |
-| [Performance](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/Performance.html)                       | Performance 对象，用于获取性能数据及创建性能监听器                                                                                          |
-| [PerformanceEntry](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/PerformanceEntry.html)             | 单条性能数据                                                                                                                   |
-| [PerformanceObserver](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/PerformanceObserver.html)       | PerformanceObserver 对象，用于监听性能相关                                                                                          |
-
-### 分包加载
-| API                                                                                                                              | 功能                    |
-| -------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| [wx.preDownloadSubpackage](https://developers.weixin.qq.com/miniprogram/dev/api/base/subpackage/wx.preDownloadSubpackage.html)   | 触发分包预下载               |
-| [PreDownloadSubpackageTask](https://developers.weixin.qq.com/miniprogram/dev/api/base/subpackage/PreDownloadSubpackageTask.html) | 预下载分包任务实例，用于获取分包预下载状态 |
-### 加密
-| API                                                                                                                      | 功能       |
-| ------------------------------------------------------------------------------------------------------------------------ | -------- |
-| [wx.getUserCryptoManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/crypto/wx.getUserCryptoManager.html) | 获取用户加密模块 |
-| [UserCryptoManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/crypto/UserCryptoManager.html)             | 用户加密模块   |
-
-## 路由
-
-| API                                                                                                | 功能                                                                                                                |
-| -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| [wx.switchTab](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.switchTab.html)       | 跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面                                                                                  |
-| [wx.rewriteRoute](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.rewriteRoute.html) | 重写正在进行中的路由事件，详见 [路由重写](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/route-rewrite.html) |
-| [wx.reLaunch](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.reLaunch.html)         | 关闭所有页面，打开到应用内的某个页面                                                                                                |
-| [wx.redirectTo](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.redirectTo.html)     | 关闭当前页面，跳转到应用内的某个页面                                                                                                |
-| [wx.navigateTo](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.navigateTo.html)     | 保留当前页面，跳转到应用内的某个页面                                                                                                |
-| [wx.navigateBack](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.navigateBack.html) | 关闭当前页面，返回上一页面或多级页面                                                                                                |
-| [EventChannel](https://developers.weixin.qq.com/miniprogram/dev/api/route/EventChannel.html)       | 页面间事件通信通道                                                                                                         |
-| [wx.router](https://developers.weixin.qq.com/miniprogram/dev/api/route/router/wx.router.html)      | outer 对象，可以通过 `wx.router` 获取（自定义路由）                                                                               |
-
-## 跳转
-
-| API                                                                                                                                               | 功能                                                |
-| ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| [wx.restartMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.restartMiniProgram.html)                                 | 重启当前小程序                                           |
-| [wx.openOfficialAccountProfile](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.openOfficialAccountProfile.html)                 | 通过小程序打开公众号主页                                      |
-| [wx.openOfficialAccountChat](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.openOfficialAccountChat.html)                       | 通过小程序打开公众号会话界面                                    |
-| [wx.openOfficialAccountArticle](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.openOfficialAccountArticle.html)                 | 通过小程序打开任意公众号文章（不包括临时链接等异常状态下的公众号文章），必须有点击行为才能调用成功 |
-| [wx.openEmbeddedMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.openEmbeddedMiniProgram.html)                       | 打开半屏小程序                                           |
-| [wx.onEmbeddedMiniProgramHeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.onEmbeddedMiniProgramHeightChange.html)   | 监听半屏小程序可视高度变化事件                                   |
-| [wx.offEmbeddedMiniProgramHeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.offEmbeddedMiniProgramHeightChange.html) | 移除半屏小程序可视高度变化事件的监听函数                              |
-| [wx.navigateToMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.navigateToMiniProgram.html)                           | 打开另一个小程序                                          |
-| [wx.navigateBackMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.navigateBackMiniProgram.html)                       | 返回到上一个小程序                                         |
-| [wx.exitMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.exitMiniProgram.html)                                       | 退出当前小程序                                           |
-
-
-
-## 聊天工具
-
-| API                                                                                                                       | 功能                                       |
-| ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| [wx.shareVideoToGroup](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareVideoToGroup.html)           | 转发视频到聊天                                  |
-| [wx.shareImageToGroup](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareImageToGroup.html)           | 转发图片到聊天                                  |
-| [wx.shareFileToGroup](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareFileToGroup.html)             | 转发文件到聊天                                  |
-| [wx.shareEmojiToGroup](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareEmojiToGroup.html)           | 转发表情到聊天                                  |
-| [wx.shareAppMessageToGroup](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareAppMessageToGroup.html) | 转发小程序卡片到聊天                               |
-| [wx.selectGroupMembers](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.selectGroupMembers.html)         | 选择聊天室的成员，并返回选择成员的 group_openid           |
-| [wx.openChatTool](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.openChatTool.html)                     | 进入聊天工具模式                                 |
-| [wx.notifyGroupMembers](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.notifyGroupMembers.html)         | 提醒用户完成任务，标题长度不超过 30 个字符，支持中英文和数字，中文算2个字符 |
-| [wx.getChatToolInfo](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.getChatToolInfo.html)               | 获取聊天工具模式下的群聊信息                           |
-
-## 转发
-
-| API                                                                                                                    | 功能                                |
-| ---------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| [wx.updateShareMenu](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.updateShareMenu.html)               | 更新转发属性                            |
-| [wx.showShareMenu](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.showShareMenu.html)                   | 设置右上角点开的详情界面中的分享按钮是否可用            |
-| [wx.showShareImageMenu](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.showShareImageMenu.html)         | 打开分享图片弹窗，可以将图片发送给朋友、分享至朋友圈、收藏或下载  |
-| [wx.shareVideoMessage](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.shareVideoMessage.html)           | 转发视频到聊天                           |
-| [wx.shareToOfficialAccount](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.shareToOfficialAccount.html) | 支持拉起公众号图文发表页，用户可将图片与文字内容发表至公众号    |
-| [wx.shareFileMessage](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.shareFileMessage.html)             | 转发文件到聊天                           |
-| [wx.onCopyUrl](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.onCopyUrl.html)                           | 监听用户点击右上角菜单的「复制链接」按钮时触发的事件        |
-| [wx.offCopyUrl](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.offCopyUrl.html)                         | 移除用户点击右上角菜单的「复制链接」按钮时触发的事件的全部监听函数 |
-| [wx.hideShareMenu](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.hideShareMenu.html)                   | 隐藏当前页面的转发按钮                       |
-| [wx.getShareInfo](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.getShareInfo.html)                     | 获取转发详细信息（主要是获取群ID）                |
-| [wx.authPrivateMessage](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.authPrivateMessage.html)         | 验证私密消息                            |
-
-## 界面
-### 交互
-
-| API                                                                                                                                 | 功能             |
-| ----------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| [wx.showToast](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showToast.html)                               | 显示消息提示框        |
-| [wx.showModal](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showModal.html)                               | 显示模态对话框        |
-| [wx.showLoading](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showLoading.html)                           | 显示 loading 提示框 |
-| [wx.showActionSheet](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showActionSheet.html)                   | 显示操作菜单         |
-| [wx.hideToast](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.hideToast.html)                               | 隐藏消息提示框        |
-| [wx.hideLoading](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.hideLoading.html)                           | 隐藏 loading 提示框 |
-| [wx.enableAlertBeforeUnload](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.enableAlertBeforeUnload.html)   | 开启小程序页面返回询问对话框 |
-| [wx.disableAlertBeforeUnload](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.disableAlertBeforeUnload.html) | 关闭小程序页面返回询问对话框 |
-
-### 导航栏
-| API                                                                                                                                    | 功能             |
-| -------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| [wx.showNavigationBarLoading](https://developers.weixin.qq.com/miniprogram/dev/api/ui/navigation-bar/wx.showNavigationBarLoading.html) | 在当前页面显示导航条加载动画 |
-| [wx.setNavigationBarTitle](https://developers.weixin.qq.com/miniprogram/dev/api/ui/navigation-bar/wx.setNavigationBarTitle.html)       | 动态设置当前页面的标题    |
-| [wx.setNavigationBarColor](https://developers.weixin.qq.com/miniprogram/dev/api/ui/navigation-bar/wx.setNavigationBarColor.html)       | 设置页面导航条颜色      |
-| [wx.hideNavigationBarLoading](https://developers.weixin.qq.com/miniprogram/dev/api/ui/navigation-bar/wx.hideNavigationBarLoading.html) | 在当前页面隐藏导航条加载动画 |
-| [wx.hideHomeButton](https://developers.weixin.qq.com/miniprogram/dev/api/ui/navigation-bar/wx.hideHomeButton.html)                     | 隐藏返回首页按钮       |
-### 背景
-| API                                                                                                                            | 功能                      |
-| ------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
-| [wx.setBackgroundTextStyle](https://developers.weixin.qq.com/miniprogram/dev/api/ui/background/wx.setBackgroundTextStyle.html) | 动态设置下拉背景字体、loading 图的样式 |
-| [wx.setBackgroundColor](https://developers.weixin.qq.com/miniprogram/dev/api/ui/background/wx.setBackgroundColor.html)         | 动态设置窗口的背景色              |
-### Tab Bar
-| API                                                                                                               | 功能                                        |
-| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| [wx.showTabBarRedDot](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.showTabBarRedDot.html)   | 显示 tabBar 某一项的右上角的红点                      |
-| [wx.showTabBar](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.showTabBar.html)               | 显示 tabBar                                 |
-| [wx.setTabBarStyle](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.setTabBarStyle.html)       | 动态设置 tabBar 的整体样式                         |
-| [wx.setTabBarItem](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.setTabBarItem.html)         | 动态设置 tabBar 某一项的内容，`2.7.0` 起图片支持临时文件和网络文件 |
-| [wx.setTabBarBadge](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.setTabBarBadge.html)       | 为 tabBar 某一项的右上角添加文本                      |
-| [wx.removeTabBarBadge](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.removeTabBarBadge.html) | 移除 tabBar 某一项右上角的文本                       |
-| [wx.hideTabBarRedDot](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.hideTabBarRedDot.html)   | 隐藏 tabBar 某一项的右上角的红点                      |
-| [wx.hideTabBar](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.hideTabBar.html)               | 隐藏 tabBar                                 |
-### 字体
-| API                                                                                                                | 功能       |
-| ------------------------------------------------------------------------------------------------------------------ | -------- |
-| [wx.loadFontFace](https://developers.weixin.qq.com/miniprogram/dev/api/ui/font/wx.loadFontFace.html)               | 动态加载网络字体 |
-| [wx.loadBuiltInFontFace](https://developers.weixin.qq.com/miniprogram/dev/api/ui/font/wx.loadBuiltInFontFace.html) | 加载内置字体   |
-### 下拉刷新
-| API                                                                                                                               | 功能         |
-| --------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| [wx.stopPullDownRefresh](https://developers.weixin.qq.com/miniprogram/dev/api/ui/pull-down-refresh/wx.stopPullDownRefresh.html)   | 停止当前页面下拉刷新 |
-| [wx.startPullDownRefresh](https://developers.weixin.qq.com/miniprogram/dev/api/ui/pull-down-refresh/wx.startPullDownRefresh.html) | 开始下拉刷新     |
-### 滚动
-| API                                                                                                        | 功能                                                                                                                                                                                                                                       |
-| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.pageScrollTo](https://developers.weixin.qq.com/miniprogram/dev/api/ui/scroll/wx.pageScrollTo.html)     | 将页面滚动到目标位置，支持选择器和滚动距离两种方式定位                                                                                                                                                                                                              |
-| [ScrollViewContext](https://developers.weixin.qq.com/miniprogram/dev/api/ui/scroll/ScrollViewContext.html) | 增强 ScrollView 实例，可通过 [wx.createSelectorQuery](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/wx.createSelectorQuery.html) 的 [NodesRef.node](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/NodesRef.node.html)方法获取 |
-### 动画
-
-| API                                                                                                             | 功能                                                                                                     |
-| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| [wx.createAnimation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/wx.createAnimation.html) | 创建一个动画实例 [animation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.html) |
-| [Animation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.html)                   | 动画对象                                                                                                   |
-### 顶置
-| API                                                                                                      | 功能          |
-| -------------------------------------------------------------------------------------------------------- | ----------- |
-| [wx.setTopBarText](https://developers.weixin.qq.com/miniprogram/dev/api/ui/sticky/wx.setTopBarText.html) | 动态设置置顶栏文字内容 |
-
-### 自定义组件
-| API                                                                                                      | 功能                |
-| -------------------------------------------------------------------------------------------------------- | ----------------- |
-| [wx.nextTick](https://developers.weixin.qq.com/miniprogram/dev/api/ui/custom-component/wx.nextTick.html) | 延迟一部分操作到下一个时间片再执行 |
-### 菜单
-| API                                                                                                                                                                | 功能                              |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
-| [ wx.onOnUserTriggerTranslation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.onOnUserTriggerTranslation.html)                                  | 监听用户触发小程序菜单中翻译功能的事件             |
-| [wx.onMenuButtonBoundingClientRectWeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.onMenuButtonBoundingClientRectWeightChange.html)   | 监听菜单按钮（右上角胶囊按钮）的布局位置信息变化事件      |
-| [wx.offOnUserTriggerTranslation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.offOnUserTriggerTranslation.html)                                 | 移除用户触发小程序菜单中翻译功能的事件的监听函数        |
-| [wx.offMenuButtonBoundingClientRectWeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.offMenuButtonBoundingClientRectWeightChange.html) | 移除菜单按钮（右上角胶囊按钮）的布局位置信息变化事件的监听函数 |
-| [wx.getMenuButtonBoundingClientRect](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.getMenuButtonBoundingClientRect.html)                         | 获取菜单按钮（右上角胶囊按钮）的布局位置信息          |
-### 窗口
-| API                                                                                                                                      | 功能                                                  |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| [wx.setWindowSize](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.setWindowSize.html)                                 | 设置窗口大小，该接口仅适用于 PC 平台，使用细则请参见指南                      |
-| [wx.onWindowStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.onWindowStateChange.html)                     | 监听小程序窗口状态变化事件                                       |
-| [wx.onWindowResize](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.onWindowResize.html)                               | 监听窗口尺寸变化事件                                          |
-| [wx.onOnParallelStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.onOnParallelStateChange.html)             | 监听小程序分栏状态变化事件                                       |
-| [wx.offWindowStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.offWindowStateChange.html)                   | 移除小程序窗口状态变化事件的监听函数                                  |
-| [wx.offWindowResize](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.offWindowResize.html)                             | 移除窗口尺寸变化事件的监听函数                                     |
-| [wx.offOnParallelStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.offOnParallelStateChange.html)           | 移除小程序分栏状态变化事件的监听函数                                  |
-| [wx.checkIsPictureInPictureActive](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.checkIsPictureInPictureActive.html) | 返回当前是否存在小窗播放（小窗在 video/live-player/live-pusher 下可用） |
-### worklet动画
-| API                                                                                           | 功能                              |
-| --------------------------------------------------------------------------------------------- | ------------------------------- |
-| [wx.worklet](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/wx.worklet.html) | worklet 对象，可以通过 `wx.worklet` 获取 |
-#### 基础
-| API                                                                                                                                                | 功能                                                 |
-| -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| [  worklet.cancelAnimation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/base/worklet.cancelAnimation.html)                     | 取消由 `SharedValue` 驱动的动画                            |
-| [worklet.derived](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/base/worklet.derived.html)                                       | 衍生值 `DerivedValue`，可基于已有的 `SharedValue` 生成其它共享变量   |
-| [worklet.scrollViewContext](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/base/worklet.scrollViewContext.html)                   | `ScrollView` 实例，可在 `worklet` 函数内操作 `scroll-view`组件 |
-| [worklet.scrollViewContext.scrollTo](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/base/worklet.scrollViewContext.scrollTo.html) | 滚动至指定位置                                            |
-| [worklet.shared](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/base/worklet.shared.html)                                         | 创建共享变量 `SharedValue`，用于跨线程共享数据和驱动动画                |
-#### 动画
-| API                                                                                                             | 功能                                                                                                                                                         |     |
-| --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
-| [worklet.decay](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/animation/worklet.decay.html)   | 基于滚动衰减的动画                                                                                                                                                  |     |
-| [worklet.Easing](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/animation/worklet.Easing.html) | Easing 模块实现了常见的动画缓动函数（动画效果参考 https://easings.net/ ），可从 [wx.worklet](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/wx.worklet.html) 对象中读取 |     |
-| [worklet.spring](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/animation/worklet.spring.html) | 基于物理的动画                                                                                                                                                    |     |
-| [worklet.timing](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/animation/worklet.timing.html) | 基于时间的动画                                                                                                                                                    |     |
-#### 组合动画
-| API                                                                                                                         | 功能               |
-| --------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| [worklet.delay](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/combine-animation/worklet.delay.html)       | 延迟执行动画           |
-| [worklet.repeat](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/combine-animation/worklet.repeat.html)     | 重复执行动画           |
-| [worklet.sequence](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/combine-animation/worklet.sequence.html) | 组合动画序列，依次执行传入的动画 |
-#### 工具函数
-| API                                                                                                                   | 功能                                                                                                |
-| --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| [worklet.runOnJS](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/tool-function/worklet.runOnJS.html) | `worklet` 函数运行在 `UI` 线程时，捕获的外部函数可能为 `worklet` 类型或普通函数，为了更明显的对其区分，要求必须使用 `runOnJS` 调回 `JS` 线程的普通函数 |
-| [worklet.runOnUI](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/tool-function/worklet.runOnUI.html) | 在 UI 线程执行 worklet 函数                                                                              |
-
-## 网络
-### 发起请求
-| API                                                                                                  | 功能            |
-| ---------------------------------------------------------------------------------------------------- | ------------- |
-| [wx.request](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/wx.request.html)   | 发起 HTTPS 网络请求 |
-| [RequestTask](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/RequestTask.html) | 网络请求任务对象      |
-### 下载
-| API                                                                                                           | 功能                         |
-| ------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| [wx.downloadFile](https://developers.weixin.qq.com/miniprogram/dev/api/network/download/wx.downloadFile.html) | 下载文件资源到本地                  |
-| [DownloadTask](https://developers.weixin.qq.com/miniprogram/dev/api/network/download/DownloadTask.html)       | 一个可以监听下载进度变化事件，以及取消下载任务的对象 |
-### 上传
-| API                                                                                                       | 功能                         |
-| --------------------------------------------------------------------------------------------------------- | -------------------------- |
-| [  wx.uploadFile](https://developers.weixin.qq.com/miniprogram/dev/api/network/upload/wx.uploadFile.html) | 将本地资源上传到服务器                |
-| [UploadTask](https://developers.weixin.qq.com/miniprogram/dev/api/network/upload/UploadTask.html)         | 一个可以监听上传进度变化事件，以及取消上传任务的对象 |
-### WebSocket
-| API                                                                                                                      | 功能                                         |
-| ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
-| [wx.sendSocketMessage](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.sendSocketMessage.html) | 通过 WebSocket 连接发送数据                        |
-| [wx.onSocketOpen](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.onSocketOpen.html)           | 监听 WebSocket 连接打开事件                        |
-| [wx.onSocketMessage](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.onSocketMessage.html)     | 监听 WebSocket 接收到服务器的消息事件                   |
-| [wx.onSocketError](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.onSocketError.html)         | 监听 WebSocket 错误事件                          |
-| [wx.onSocketClose](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.onSocketClose.html)         | 监听 WebSocket 连接关闭事件                        |
-| [wx.connectSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.connectSocket.html)         | 创建一个 WebSocket 连接                          |
-| [wx.closeSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.closeSocket.html)             | 关闭 WebSocket 连接                            |
-| [SocketTask](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/SocketTask.html)                     | WebSocket 任务，可通过 wx.connectSocket() 接口创建返回 |
-### mDNS
-| API                                                                                                                                       | 功能                     |
-| ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| [ wx.stopLocalServiceDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.stopLocalServiceDiscovery.html)      | 停止搜索 mDNS 服务           |
-| [wx.startLocalServiceDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.startLocalServiceDiscovery.html)     | 开始搜索局域网下的 mDNS 服务      |
-| [wx.onLocalServiceResolveFail](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.onLocalServiceResolveFail.html)       | 监听 mDNS 服务解析失败的事件      |
-| [wx.onLocalServiceLost](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.onLocalServiceLost.html)                     | 监听 mDNS 服务离开的事件        |
-| [wx.onLocalServiceFound](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.onLocalServiceFound.html)                   | 监听 mDNS 服务发现的事件        |
-| [wx.onLocalServiceDiscoveryStop](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.onLocalServiceDiscoveryStop.html)   | 监听 mDNS 服务停止搜索的事件      |
-| [wx.offLocalServiceResolveFail](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.offLocalServiceResolveFail.html)     | 移除 mDNS 服务解析失败的事件的监听函数 |
-| [wx.offLocalServiceLost](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.offLocalServiceLost.html)                   | 移除 mDNS 服务离开的事件的监听函数   |
-| [wx.offLocalServiceFound](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.offLocalServiceFound.html)                 | 移除 mDNS 服务发现的事件的监听函数   |
-| [wx.offLocalServiceDiscoveryStop](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.offLocalServiceDiscoveryStop.html) | 移除 mDNS 服务停止搜索的事件的监听函数 |
-### TCP通信
-| API                                                                                                            | 功能                            |
-| -------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| [wx.createTCPSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/wx.createTCPSocket.html) | 创建一个 TCP Socket 实例            |
-| [TCPSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.html)                   | 一个 TCP Socket 实例，默认使用 IPv4 协议 |
-### UDP通信
-| API                                                                                                            | 功能                            |
-| -------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| [wx.createUDPSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/wx.createUDPSocket.html) | 创建一个 UDP Socket 实例            |
-| [UDPSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.html)                   | 一个 UDP Socket 实例，默认使用 IPv4 协议 |
-
-## 支付
-
-| API                                                                                                                        | 功能                                  |
-| -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| [wx.requestVirtualPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestVirtualPayment.html)     | 发起米大师虚拟支付                           |
-| [wx.requestPluginPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestPluginPayment.html)       | 插件中发起支付                             |
-| [wx.requestPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestPayment.html)                   | 发起微信支付                              |
-| [wx.requestMerchantTransfer](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestMerchantTransfer.html) | 商家转账用户确认模式下，在微信客户端通过小程序拉起页面请求用户确认收款 |
-| [wx.requestCommonPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestCommonPayment.html)       | 发起通用支付                              |
-| [wx.openHKOfflinePayView](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.openHKOfflinePayView.html)       | 拉起WeChat Pay HK付款码                  |
-| [wx.createGlobalPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.createGlobalPayment.html)         | 创建全球支付方式的对象                         |
-| [GlobalPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/GlobalPayment.html)                           | 全球收银对象 GlobalPayment                |
-
-## 数据缓存
-
-| 名称                                                                                                                 | 功能                                                                                                             |
-| ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| [wx.setStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.setStorageSync.html)           | 将数据存储在本地缓存中指定的 key 中                                                                                           |
-| [wx.setStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.setStorage.html)                   | 将数据存储在本地缓存中指定的 key 中                                                                                           |
-| [wx.revokeBufferURL](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.revokeBufferURL.html)         | 根据 URL 销毁存在内存中的数据                                                                                              |
-| [wx.removeStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.removeStorageSync.html)     | [wx.removeStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.removeStorage.html) 的同步版本   |
-| [wx.removeStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.removeStorage.html)             | 从本地缓存中移除指定 key                                                                                                 |
-| [wx.getStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.getStorageSync.html)           | 从本地缓存中同步获取指定 key 的内容                                                                                           |
-| [wx.getStorageInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.getStorageInfoSync.html)   | [wx.getStorageInfo](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.getStorageInfo.html) 的同步版本 |
-| [wx.getStorageInfo](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.getStorageInfo.html)           | 异步获取当前storage的相关信息                                                                                             |
-| [wx.getStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.getStorage.html)                   | 从本地缓存中异步获取指定 key 的内容                                                                                           |
-| [wx.createBufferURL](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.createBufferURL.html)         | 根据传入的 buffer 创建一个唯一的 URL 存在内存中                                                                                 |
-| [wx.clearStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.clearStorageSync.html)       | [wx.clearStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.clearStorage.html) 的同步版本     |
-| [wx.clearStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.clearStorage.html)               | 清理本地数据缓存                                                                                                       |
-| [wx.batchSetStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.batchSetStorageSync.html) | 将数据批量存储在本地缓存中指定的 key 中                                                                                         |
-| [wx.batchSetStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.batchSetStorage.html)         | 将数据批量存储在本地缓存中指定的 key 中                                                                                         |
-| [wx.batchGetStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.batchGetStorageSync.html) | 从本地缓存中同步批量获取指定 key 的内容                                                                                         |
-| [wx.batchGetStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.batchGetStorage.html)         | 从本地缓存中异步批量获取指定 key 的内容                                                                                         |
-
-### 数据预拉取和周期性更新
-| API                                                                                                                                           | 功能                                   |
-| --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| [  wx.setBackgroundFetchToken](https://developers.weixin.qq.com/miniprogram/dev/api/storage/background-fetch/wx.setBackgroundFetchToken.html) | 设置自定义登录态，在周期性拉取数据时带上，便于第三方服务器验证请求合法性 |
-| [wx.onBackgroundFetchData](https://developers.weixin.qq.com/miniprogram/dev/api/storage/background-fetch/wx.onBackgroundFetchData.html)       | 监听收到 backgroundFetch 数据事件            |
-| [wx.getBackgroundFetchToken](https://developers.weixin.qq.com/miniprogram/dev/api/storage/background-fetch/wx.getBackgroundFetchToken.html)   | 获取设置过的自定义登录态                         |
-| [wx.getBackgroundFetchData](https://developers.weixin.qq.com/miniprogram/dev/api/storage/background-fetch/wx.getBackgroundFetchData.html)     | 拉取 backgroundFetch 客户端缓存数据           |
-### 缓存管理器
-
-| API                                                                                                                           | 功能      |
-| ----------------------------------------------------------------------------------------------------------------------------- | ------- |
-| [wx.createCacheManager](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/wx.createCacheManager.html) | 创建缓存管理器 |
-| [CacheManager](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.html)                   | 缓存管理器   |
-## 数据分析
-
-
-
-| API                                                                                                              | 功能                  |
-| ---------------------------------------------------------------------------------------------------------------- | ------------------- |
-| [wx.reportMonitor](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.reportMonitor.html)     | 自定义业务数据监控上报接口       |
-| [wx.reportEvent](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.reportEvent.html)         | 事件上报                |
-| [wx.reportAnalytics](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.reportAnalytics.html) | 自定义分析数据上报接口         |
-| [wx.getExptInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.getExptInfoSync.html) | 给定实验参数数组，获取对应的实验参数值 |
-| [wx.getCommonConfig](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.getCommonConfig.html) | 给定实验参数数组，获取对应的实验参数值 |
-
-
-
-## 画布
-
-
-
-| API                                                                                                                   | 功能                                                                                                                                        |
-| --------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.createOffscreenCanvas](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.createOffscreenCanvas.html) | 创建离屏 canvas 实例                                                                                                                            |
-| [wx.createCanvasContext](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.createCanvasContext.html)     | 创建 canvas 的绘图上下文 [CanvasContext](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.html) 对象                       |
-| [wx.canvasToTempFilePath](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.canvasToTempFilePath.html)   | 把当前画布指定区域的内容导出生成指定大小的图片                                                                                                                   |
-| [wx.canvasPutImageData](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.canvasPutImageData.html)       | 将像素数据绘制到画布                                                                                                                                |
-| [wx.canvasGetImageData](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.canvasGetImageData.html)       | 获取 canvas 区域隐含的像素数据                                                                                                                       |
-| [Canvas](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Canvas.html)                                     | Canvas 实例，可通过 [SelectorQuery](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/SelectorQuery.html) 获取                            |
-| [CanvasGradient](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasGradient.html)                     | 渐变对象                                                                                                                                      |
-| [Color](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Color.html)                                       | 颜色                                                                                                                                        |
-| [Image](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Image.html)                                       | 图片对象                                                                                                                                      |
-| [ImageData](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/ImageData.html)                               | ImageData 对象                                                                                                                              |
-| [OffscreenCanvas](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/OffscreenCanvas.html)                   | 离屏 canvas 实例，可通过 [wx.createOffscreenCanvas](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.createOffscreenCanvas.html) 创建 |
-| [Path2D](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.html)                                     | Canvas 2D API 的接口 Path2D 用来声明路径，此路径稍后会被CanvasRenderingContext2D 对象使用                                                                      |
-| [RenderingContext](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/RenderingContext.html)                 | Canvas 绘图上下文                                                                                                                              |
-
-
-
-## 媒体
-### 地图
-| API                                                                                                            | 功能                                                                                                                                                                                |
-| -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.createMapContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/wx.createMapContext.html) | 创建 [map](https://developers.weixin.qq.com/miniprogram/dev/component/map.html) 上下文 [MapContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.html) 对象 |
-| [MapContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.html)                   | MapContext 实例，可通过 [wx.createMapContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/wx.createMapContext.html) 获取                                               |
-### 图片
-| API                                                                                                                          | 功能               |
-| ---------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| [wx.saveImageToPhotosAlbum](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.saveImageToPhotosAlbum.html) | 保存图片到系统相册        |
-| [wx.previewMedia](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.previewMedia.html)                     | 预览图片和视频          |
-| [wx.previewImage](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.previewImage.html)                     | 在新页面中全屏预览图片      |
-| [wx.getImageInfo](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.getImageInfo.html)                     | 获取图片信息           |
-| [wx.editImage](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.editImage.html)                           | 编辑图片接口           |
-| [wx.cropImage](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.cropImage.html)                           | 裁剪图片接口           |
-| [wx.compressImage](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.compressImage.html)                   | 压缩图片接口，可选压缩质量    |
-| [wx.chooseMessageFile](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.chooseMessageFile.html)           | 从客户端会话选择文件       |
-| [wx.chooseImage](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.chooseImage.html)                       | 从本地相册选择图片或使用相机拍照 |
-### 视频
-
-| API                                                                                                                          | 功能                                                                                                                                                                                          |
-| ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.saveVideoToPhotosAlbum](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.saveVideoToPhotosAlbum.html) | 保存视频到系统相册                                                                                                                                                                                   |
-| [wx.openVideoEditor](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.openVideoEditor.html)               | 打开视频编辑器                                                                                                                                                                                     |
-| [wx.getVideoInfo](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.getVideoInfo.html)                     | 获取视频详细信息                                                                                                                                                                                    |
-| [wx.createVideoContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.createVideoContext.html)         | 创建 [video](https://developers.weixin.qq.com/miniprogram/dev/component/video.html) 上下文 [VideoContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.html) 对象 |
-| [wx.compressVideo](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.compressVideo.html)                   | 压缩视频接口                                                                                                                                                                                      |
-| [wx.chooseVideo](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.chooseVideo.html)                       | 拍摄视频或从手机相册中选视频                                                                                                                                                                              |
-| [wx.chooseMedia](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.chooseMedia.html)                       | 拍摄或从手机相册中选择图片或视频                                                                                                                                                                            |
-| [wx.checkDeviceSupportHevc](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.checkDeviceSupportHevc.html) | 查询设备是否支持 H.265 编码                                                                                                                                                                           |
-| [VideoContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.html)                           | VideoContext 实例，可通过 [wx.createVideoContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.createVideoContext.html) 获取                                                 |
-|                                                                                                                              |                                                                                                                                                                                             |
-
-### 音频
-| API                                                                                                                              | 功能                                                                                                                                                                                                                                                                                                                                  |
-| -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.stopVoice](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.stopVoice.html)                               | 结束播放语音                                                                                                                                                                                                                                                                                                                              |
-| [wx.setInnerAudioOption](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.setInnerAudioOption.html)           | 设置 [InnerAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.html) 的播放选项                                                                                                                                                                                                               |
-| [wx.playVoice](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.playVoice.html)                               | 开始播放语音                                                                                                                                                                                                                                                                                                                              |
-| [wx.pauseVoice](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.pauseVoice.html)                             | 暂停正在播放的语音                                                                                                                                                                                                                                                                                                                           |
-| [wx.getAvailableAudioSources](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.getAvailableAudioSources.html) | 获取当前支持的音频输入源                                                                                                                                                                                                                                                                                                                        |
-| [wx.createWebAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createWebAudioContext.html)       | 创建 WebAudio 上下文                                                                                                                                                                                                                                                                                                                     |
-| [wx.createMediaAudioPlayer](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createMediaAudioPlayer.html)     | 创建媒体音频播放器对象 [MediaAudioPlayer](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/MediaAudioPlayer.html) 对象，可用于播放视频解码器 [VideoDecoder](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/VideoDecoder.html) 输出的音频                                                                               |
-| [wx.createInnerAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createInnerAudioContext.html)   | 创建内部 [audio](https://developers.weixin.qq.com/miniprogram/dev/component/audio.html) 上下文 [InnerAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.html) 对象                                                                                                                             |
-| [wx.createAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createAudioContext.html)             | 创建 [audio](https://developers.weixin.qq.com/miniprogram/dev/component/audio.html) 上下文 [AudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioContext.html) 对象                                                                                                                                         |
-| [AudioBuffer](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioBuffer.html)                                 | AudioBuffer接口表示存在内存里的一段短小的音频资源，利用[WebAudioContext.decodeAudioData](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.decodeAudioData.html)方法从一个音频文件构建，或者利用 [WebAudioContext.createBuffer](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createBuffer.html)从原始数据构建 |
-| [AudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioContext.html)                               | [AudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioContext.html) 实例，可通过 [wx.createAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createAudioContext.html) 获取                                                                                                   |
-| [AudioListener](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioListener.html)                             | 空间音频监听器，代表在一个音频场景内唯一的位置和方向信息                                                                                                                                                                                                                                                                                                        |
-| [AudioParam](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioParam.html)                                   | AudioParam 接口代表音频相关的参数，通常是 AudioNode（例如 GainNode.gain）的参数                                                                                                                                                                                                                                                                           |
-| [BufferSourceNode](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/BufferSourceNode.html)                       | 音频源节点，通过 [WebAudioContext.createBufferSource](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createBufferSource.html)方法获得                                                                                                                                                                         |
-| [InnerAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.html)                     | InnerAudioContext 实例，可通过 [wx.createInnerAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createInnerAudioContext.html)接口获取实例                                                                                                                                                                       |
-| [MediaAudioPlayer](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/MediaAudioPlayer.html)                       | MediaAudioPlayer 实例，可通过 [wx.createMediaAudioPlayer](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createMediaAudioPlayer.html)接口获取实例                                                                                                                                                                          |
-| [WebAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.html)                         | WebAudioContext 实例，通过[wx.createWebAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createWebAudioContext.html) 接口获取该实例                                                                                                                                                                             |
-| [WebAudioContextNode](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContextNode.html)                 | 一类音频处理模块，不同的Node具备不同的功能，如GainNode(音量调整)等                                                                                                                                                                                                                                                                                            |
-
-### 背景音频
-| API                                                                                                                                                   | 功能                                                                                                                                                                             |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [wx.stopBackgroundAudio](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.stopBackgroundAudio.html)                     | 停止播放音乐                                                                                                                                                                         |
-| [wx.seekBackgroundAudio](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.seekBackgroundAudio.html)                     | 控制音乐播放进度                                                                                                                                                                       |
-| [wx.playBackgroundAudio](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.playBackgroundAudio.html)                     | 使用后台播放器播放音乐                                                                                                                                                                    |
-| [wx.pauseBackgroundAudio](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.pauseBackgroundAudio.html)                   | 暂停播放音乐                                                                                                                                                                         |
-| [wx.onBackgroundAudioStop](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.onBackgroundAudioStop.html)                 | 监听音乐停止事件                                                                                                                                                                       |
-| [wx.onBackgroundAudioPlay](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.onBackgroundAudioPlay.html)                 | 监听音乐播放事件                                                                                                                                                                       |
-| [wx.onBackgroundAudioPause](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.onBackgroundAudioPause.html)               | 监听音乐暂停事件                                                                                                                                                                       |
-| [wx.getBackgroundAudioPlayerState](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.getBackgroundAudioPlayerState.html) | 获取后台音乐播放状态                                                                                                                                                                     |
-| [wx.getBackgroundAudioManager](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.getBackgroundAudioManager.html)         | 获取**全局唯一**的背景音频管理器                                                                                                                                                             |
-| [BackgroundAudioManager](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.html)                     | BackgroundAudioManager 实例，可通过 [wx.getBackgroundAudioManager](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.getBackgroundAudioManager.html) 获取 |
-
-### 实时音频
-| API                                                                                                                           | 功能                                                                                                                                                                                                               |
-| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.createLivePusherContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/wx.createLivePusherContext.html) | 创建 [live-pusher](https://developers.weixin.qq.com/miniprogram/dev/component/live-pusher.html) 上下文 [LivePusherContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.html) 对象 |
-| [wx.createLivePlayerContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/wx.createLivePlayerContext.html) | 创建 [live-player](https://developers.weixin.qq.com/miniprogram/dev/component/live-player.html) 上下文 [LivePlayerContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.html) 对象 |
-| [LivePlayerContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.html)                   | `LivePlayerContext` 实例，可通过 [wx.createLivePlayerContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/wx.createLivePlayerContext.html) 获取                                                      |
-| [LivePusherContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.html)                   | LivePusherContext 实例，可通过 [wx.createLivePusherContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/wx.createLivePusherContext.html)获取                                                         |
-### 录音
-| API                                                                                                                     | 功能                               |
-| ----------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| [wx.stopRecord](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/wx.stopRecord.html)                 | 停止录音                             |
-| [wx.startRecord](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/wx.startRecord.html)               | 开始录音                             |
-| [wx.getRecorderManager](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/wx.getRecorderManager.html) | 获取**全局唯一**的录音管理器 RecorderManager |
-| [RecorderManager](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.html)             | 全局唯一的录音管理器                       |
-
-### 相机
-| API                                                                                                                     | 功能                                                                                                                                                                                               |
-| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [wx.createCameraContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/wx.createCameraContext.html) | 创建 [camera](https://developers.weixin.qq.com/miniprogram/dev/component/camera.html) 上下文 [CameraContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraContext.html) 对象 |
-| [CameraContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraContext.html)                   | CameraContext 实例，可通过 [wx.createCameraContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/wx.createCameraContext.html) 获取                                                  |
-| [CameraFrameListener](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraFrameListener.html)       | CameraContext.onCameraFrame() 返回的监听器                                                                                                                                                             |
-
-### 富文本
-| API                                                                                                   | 功能                                                                                                                                      |
-| ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| [EditorContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.html) | EditorContext 实例，可通过 [wx.createSelectorQuery](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/wx.createSelectorQuery.html) 获取 |
-### 音视频合成
-| API                                                                                                                                 | 功能                                                                                                                                                           |
-| ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [wx.createMediaContainer](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/wx.createMediaContainer.html) | 创建音视频处理容器，最终可将容器中的轨道合成一个视频                                                                                                                                   |
-| [MediaContainer](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/MediaContainer.html)                   | 可通过 [wx.createMediaContainer](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/wx.createMediaContainer.html) 创建                   |
-| [MediaTrack](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/MediaTrack.html)                           | 可通过 [MediaContainer.extractDataSource](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/MediaContainer.extractDataSource.html) 返回 |
-### 实时语音
-| API                                                                                                                                 | 功能                                                                                                                     |
-| ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| [wx.updateVoIPChatMuteConfig](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.updateVoIPChatMuteConfig.html)     | 更新实时语音静音设置                                                                                                             |
-| [wx.subscribeVoIPVideoMembers](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.subscribeVoIPVideoMembers.html)   | 订阅视频画面成员                                                                                                               |
-| [wx.setEnable1v1Chat](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.setEnable1v1Chat.html)                     | 开启双人通话                                                                                                                 |
-| [wx.onVoIPVideoMembersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.onVoIPVideoMembersChanged.html)   | 监听实时语音通话成员视频状态变化事件                                                                                                     |
-| [wx.onVoIPChatStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.onVoIPChatStateChanged.html)         | 监听房间状态变化事件                                                                                                             |
-| [wx.onVoIPChatSpeakersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.onVoIPChatSpeakersChanged.html)   | 监听实时语音通话成员通话状态变化事件                                                                                                     |
-| [wx.onVoIPChatMembersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.onVoIPChatMembersChanged.html)     | 监听实时语音通话成员在线状态变化事件                                                                                                     |
-| [wx.onVoIPChatInterrupted](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.onVoIPChatInterrupted.html)           | 监听被动断开实时语音通话事件                                                                                                         |
-| [wx.offVoIPVideoMembersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.offVoIPVideoMembersChanged.html) | 移除实时语音通话成员视频状态变化事件的监听函数                                                                                                |
-| [wx.offVoIPChatStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.offVoIPChatStateChanged.html)       | 移除房间状态变化事件的监听函数                                                                                                        |
-| [wx.offVoIPChatSpeakersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.offVoIPChatSpeakersChanged.html) | 移除实时语音通话成员通话状态变化事件的监听函数                                                                                                |
-| [wx.offVoIPChatMembersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.offVoIPChatMembersChanged.html)   | 移除实时语音通话成员在线状态变化事件的监听函数                                                                                                |
-| [wx.offVoIPChatInterrupted](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.offVoIPChatInterrupted.html)         | 移除被动断开实时语音通话事件的监听函数                                                                                                    |
-| [wx.joinVoIPChat](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.joinVoIPChat.html)                             | 加入 (创建) 实时语音通话，更多信息可见 [实时语音指南](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/voip-chat.html) |
-| [wx.join1v1Chat](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.join1v1Chat.html)                               | 加入（创建）双人通话                                                                                                             |
-| [wx.exitVoIPChat](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.exitVoIPChat.html)                             | 退出（销毁）实时语音通话                                                                                                           |
-### 画面录制器
-| API                                                                                                                             | 功能                                                                                                                                     |
-| ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.createMediaRecorder](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/wx.createMediaRecorder.html) | 创建 WebGL 画面录制器，可逐帧录制在 WebGL 上渲染的画面并导出视频文件                                                                                              |
-| [MediaRecorder](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/MediaRecorder.html)                   | 可通过 [wx.createMediaRecorder](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/wx.createMediaRecorder.html) 创建 |
-
-### 视频解码器
-| API                                                                                                                          | 功能                                                                                                                                  |
-| ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.createVideoDecoder](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/wx.createVideoDecoder.html) | 创建视频解码器，可逐帧获取解码后的数据                                                                                                                 |
-| [VideoDecoder](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/VideoDecoder.html)                   | 可通过 [wx.createVideoDecoder](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/wx.createVideoDecoder.html) 创建 |
-
-## 位置
-
-| API                                                                                                                                     | 功能                                                                                                                                                                                                                                                                             |
-| --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [wx.stopLocationUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.stopLocationUpdate.html)                       | 关闭监听实时位置变化，前后台都停止消息接收                                                                                                                                                                                                                                                          |
-| [wx.startLocationUpdateBackground](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.startLocationUpdateBackground.html) | 开启小程序在前后台时均可接收位置消息，后台包括离开小程序后继续使用微信（微信仍在前台）、离开微信（微信在后台）两个场景，需引导用户开启[授权](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/authorize.html#后台定位)                                                                                                           |
-| [wx.startLocationUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.startLocationUpdate.html)                     | 开启小程序进入前台时接收位置消息                                                                                                                                                                                                                                                               |
-| [wx.openLocation](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.openLocation.html)                                   | 使用微信内置地图查看位置                                                                                                                                                                                                                                                                   |
-| [wx.onLocationChangeError](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.onLocationChangeError.html)                 | 监听持续定位接口返回失败时触发                                                                                                                                                                                                                                                                |
-| [wx.onLocationChange](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.onLocationChange.html)                           | 监听实时地理位置变化事件，需结合 [wx.startLocationUpdateBackground](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.startLocationUpdateBackground.html)、[wx.startLocationUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.startLocationUpdate.html)使用 |
-| [wx.offLocationChangeError](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.offLocationChangeError.html)               | 移除持续定位接口返回失败时触发                                                                                                                                                                                                                                                                |
-| [wx.offLocationChange](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.offLocationChange.html)                         | 移除实时地理位置变化事件的监听函数                                                                                                                                                                                                                                                              |
-| [wx.getLocation](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.getLocation.html)                                     | 获取当前的地理位置、速度                                                                                                                                                                                                                                                                   |
-| [wx.getFuzzyLocation](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.getFuzzyLocation.html)                           | 获取当前的模糊地理位置                                                                                                                                                                                                                                                                    |
-| [wx.choosePoi](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.choosePoi.html)                                         | 打开POI列表选择位置，支持模糊定位（精确到市）和精确定位混选                                                                                                                                                                                                                                                |
-| [wx.chooseLocation](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.chooseLocation.html)                               | 打开地图选择位置                                                                                                                                                                                                                                                                       |
-
-
-
-## 文件
-
-
-
-| API                                                                                                               | 功能                                                                                                                             |
-| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| [wx.saveFileToDisk](https://developers.weixin.qq.com/miniprogram/dev/api/file/wx.saveFileToDisk.html)             | 保存文件系统的文件到用户磁盘，仅在 PC 端支持                                                                                                       |
-| [wx.openDocument](https://developers.weixin.qq.com/miniprogram/dev/api/file/wx.openDocument.html)                 | 新开页面打开文档                                                                                                                       |
-| [wx.getFileSystemManager](https://developers.weixin.qq.com/miniprogram/dev/api/file/wx.getFileSystemManager.html) | 获取全局唯一的文件管理器                                                                                                                   |
-| [FileStats](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileStats.html)                             | 每个 FileStats 对象包含 path 和 Stats                                                                                                 |
-| [FileSystemManager](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.html)             | 文件管理器，可通过 [wx.getFileSystemManager](https://developers.weixin.qq.com/miniprogram/dev/api/file/wx.getFileSystemManager.html) 获取 |
-| [ReadResult](https://developers.weixin.qq.com/miniprogram/dev/api/file/ReadResult.html)                           | 文件读取结果                                                                                                                         |
-| [Stats](https://developers.weixin.qq.com/miniprogram/dev/api/file/Stats.html)                                     | 描述文件状态的对象                                                                                                                      |
-| [WriteResult](https://developers.weixin.qq.com/miniprogram/dev/api/file/WriteResult.html)                         | 文件写入结果                                                                                                                         |
-
-
-
-## 开放接口
-
-### 登录
-| API                                                                                                         | 功能                                      |
-| ----------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| [wx.pluginLogin](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.pluginLogin.html)   | **该接口仅在小程序插件中可调用**，调用接口获得插件用户标志凭证（code） |
-| [wx.login](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.login.html)               | 调用接口获取登录凭证（code）                        |
-| [wx.checkSession](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.checkSession.html) | 检查登录态 session_key 是否过期                  |
-### 账号信息
-| API                                                                                                                            | 功能       |
-| ------------------------------------------------------------------------------------------------------------------------------ | -------- |
-| [wx.getAccountInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/account-info/wx.getAccountInfoSync.html) | 获取当前账号信息 |
-### 用户信息
-| API                                                                                                                 | 功能     |
-| ------------------------------------------------------------------------------------------------------------------- | ------ |
-| [wx.getUserProfile](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/wx.getUserProfile.html) | 获取用户信息 |
-| [wx.getUserInfo](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/wx.getUserInfo.html)       | 获取用户信息 |
-| [UserInfo](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/UserInfo.html)                   | 用户信息   |
-### 授权
-| API                                                                                                                                     | 功能                                                                                                                              |
-| --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| [  wx.authorizeForMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/authorize/wx.authorizeForMiniProgram.html) | **仅小程序插件中能调用该接口**，用法同 [wx.authorize](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/authorize/wx.authorize.html) |
-| [wx.authorize](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/authorize/wx.authorize.html)                               | 提前向用户发起授权请求                                                                                                                     |
-### 设置
-| API                                                                                                                     | 功能                                                                                                        |
-| ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| [wx.openSetting](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/setting/wx.openSetting.html)             | 调起客户端小程序设置界面，返回用户设置的操作结果                                                                                  |
-| [wx.getSetting](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/setting/wx.getSetting.html)               | 获取用户的当前设置                                                                                                 |
-| [AuthSetting](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/setting/AuthSetting.html)                   | 用户授权设置信息，详情参考[权限](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/authorize.html) |
-| [SubscriptionsSetting](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/setting/SubscriptionsSetting.html) | 订阅消息设置                                                                                                    |
-### 收货地址
-| API                                                                                                               | 功能       |
-| ----------------------------------------------------------------------------------------------------------------- | -------- |
-| [  wx.chooseAddress](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/address/wx.chooseAddress.html) | 获取用户收货地址 |
-### 卡卷
-| API                                                                                                | 功能         |
-| -------------------------------------------------------------------------------------------------- | ---------- |
-| [wx.openCard](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/card/wx.openCard.html) | 查看微信卡包中的卡券 |
-| [wx.addCard](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/card/wx.addCard.html)   | 批量添加卡券     |
-### 发票
-| API                                                                                                                       | 功能        |
-| ------------------------------------------------------------------------------------------------------------------------- | --------- |
-| [wx.chooseInvoiceTitle](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/invoice/wx.chooseInvoiceTitle.html) | 选择用户的发票抬头 |
-| [wx.chooseInvoice](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/invoice/wx.chooseInvoice.html)           | 选择用户已有的发票 |
-### 生物认证
-| API                                                                                                                                                   | 功能                   |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| [ wx.startSoterAuthentication](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/soter/wx.startSoterAuthentication.html)                  | 开始 SOTER 生物认证        |
-| [wx.checkIsSupportSoterAuthentication](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/soter/wx.checkIsSupportSoterAuthentication.html) | 获取本机支持的 SOTER 生物认证方式 |
-| [wx.checkIsSoterEnrolledInDevice](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/soter/wx.checkIsSoterEnrolledInDevice.html)           | 获取设备内是否录入如指纹等生物信息的接口 |
-### 微信运动
-| API                                                                                                         | 功能               |
-| ----------------------------------------------------------------------------------------------------------- | ---------------- |
-| [wx.shareToWeRun](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/werun/wx.shareToWeRun.html) | 分享数据到微信运动        |
-| [wx.getWeRunData](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/werun/wx.getWeRunData.html) | 获取用户过去三十一天微信运动步数 |
-### 订阅消息
-| API                                                                                                                                                       | 功能                                       |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| [wx.requestSubscribeMessage](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/subscribe-message/wx.requestSubscribeMessage.html)             | 调起客户端小程序订阅消息界面，返回用户订阅消息的操作结果             |
-| [wx.requestSubscribeDeviceMessage](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/subscribe-message/wx.requestSubscribeDeviceMessage.html) | 订阅设备消息接口，调用后弹出授权框，用户同意后会允许开发者给用户发送订阅模版消息 |
-### 微信红包
-| API                                                                                                                  | 功能          |
-| -------------------------------------------------------------------------------------------------------------------- | ----------- |
-| [wx.showRedPackage](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/redpackage/wx.showRedPackage.html) | 拉取h5领取红包封面页 |
-### 微信小店
-| API                                                                                                                           | 功能           |
-| ----------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| [wx.openStoreOrderDetail](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/store/wx.openStoreOrderDetail.html)   | 打开微信小店订单详情页  |
-| [wx.openStoreCouponDetail](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/store/wx.openStoreCouponDetail.html) | 打开微信小店优惠券详情页 |
-### 收藏
-| API                                                                                                                           | 功能   |
-| ----------------------------------------------------------------------------------------------------------------------------- | ---- |
-| [wx.addVideoToFavorites](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/favorites/wx.addVideoToFavorites.html) | 收藏视频 |
-| [wx.addFileToFavorites](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/favorites/wx.addFileToFavorites.html)   | 收藏文件 |
-### 用工关系
-| API                                                                                                                                                           | 功能                                                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.requestSubscribeEmployeeMessage](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/employee-relation/wx.requestSubscribeEmployeeMessage.html) | 在用户已绑定与该小程序的[用工关系](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/laboruse/intro.html)后，可拉起用户关系消息订阅列表      |
-| [wx.checkEmployeeRelation](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/employee-relation/wx.checkEmployeeRelation.html)                     | 检查小程序[用工关系](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/laboruse/intro.html)功能和用户之间的绑定关系                |
-| [wx.bindEmployeeRelation](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/employee-relation/wx.bindEmployeeRelation.html)                       | 拉起小程序[用工关系](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/laboruse/intro.html)功能绑定弹窗，用户允许后可同步拉起用户关系消息订阅列表 |
-### 我的小程序
-| API                                                                                                                                                | 功能                 |
-| -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| [wx.checkIsAddedToMyMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/my-miniprogram/wx.checkIsAddedToMyMiniProgram.html) | 检查小程序是否被添加至 「我的小程序 |
-### 车牌
-| API                                                                                                                             | 功能    |
-| ------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| [wx.chooseLicensePlate](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/license-plate/wx.chooseLicensePlate.html) | 选择车牌号 |
-### 视频号
-| API                                                                                                                                      | 功能                                                                                  |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [wx.reserveChannelsLive](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.reserveChannelsLive.html)             | 预约视频号直播                                                                             |
-| [wx.openChannelsUserProfile](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.openChannelsUserProfile.html)     | 打开视频号主页                                                                             |
-| [wx.openChannelsLive](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.openChannelsLive.html)                   | 打开视频号直播                                                                             |
-| [wx.openChannelsEvent](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.openChannelsEvent.html)                 | 打开视频号活动页                                                                            |
-| [wx.openChannelsActivity](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.openChannelsActivity.html)           | 打开视频号视频                                                                             |
-| [wx.getChannelsShareKey](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.getChannelsShareKey.html)             | 获取视频号直播卡片/视频卡片的分享来源，仅当卡片携带了分享信息、同时用户已授权该小程序获取视频号分享信息且启动场景值为 1177、1184、1195、1208 时可用 |
-| [wx.getChannelsLiveNoticeInfo](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.getChannelsLiveNoticeInfo.html) | 获取视频号直播预告信息                                                                         |
-| [wx.getChannelsLiveInfo](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.getChannelsLiveInfo.html)             | 获取视频号直播信息                                                                           |
-
-### 音视频通话
-| API                                                                                                                         | 功能                    |
-| --------------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| [wx.requestDeviceVoIP](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/device-voip/wx.requestDeviceVoIP.html) | 请求用户授权与设备（组）间进行音视频通话  |
-| [wx.getDeviceVoIPList](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/device-voip/wx.getDeviceVoIPList.html) | 查询当前用户授权的音视频通话设备（组）信息 |
-### 微信群
-| API                                                                                                                   | 功能                |
-| --------------------------------------------------------------------------------------------------------------------- | ----------------- |
-| [wx.getGroupEnterInfo](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/group/wx.getGroupEnterInfo.html) | 获取微信群聊场景下的小程序启动信息 |
-
-### 隐私信息授权
-| API                                                                                                                                       | 功能                 |
-| ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| [wx.requirePrivacyAuthorize](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/privacy/wx.requirePrivacyAuthorize.html)       | 模拟隐私接口调用，并触发隐私弹窗逻辑 |
-| [wx.openPrivacyContract](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/privacy/wx.openPrivacyContract.html)               | 跳转至隐私协议页面          |
-| [wx.onNeedPrivacyAuthorization](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/privacy/wx.onNeedPrivacyAuthorization.html) | 监听隐私接口需要用户授权事件     |
-| [wx.getPrivacySetting](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/privacy/wx.getPrivacySetting.html)                   | 查询隐私授权情况           |
-### 微信客服
-| API                                                                                                                                      | 功能                   |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| [wx.openCustomerServiceChat](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/service-chat/wx.openCustomerServiceChat.html) | 打开微信客服，页面产生点击事件后才可调用 |
-### 微信表情
-| API                                                                                                                                      | 功能                   |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| [wx.openCustomerServiceChat](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/service-chat/wx.openCustomerServiceChat.html) | 打开微信客服，页面产生点击事件后才可调用 |
-
-
-
-## 设备
-
-### 蓝牙-通用
-| API                                                                                                                                               | 功能                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| [wx.stopBluetoothDevicesDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.stopBluetoothDevicesDiscovery.html)   | 停止搜寻附近的蓝牙外围设备         |
-| [wx.startBluetoothDevicesDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.startBluetoothDevicesDiscovery.html) | 开始搜寻附近的蓝牙外围设备         |
-| [wx.openBluetoothAdapter](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.openBluetoothAdapter.html)                     | 初始化蓝牙模块               |
-| [wx.onBluetoothDeviceFound](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.onBluetoothDeviceFound.html)                 | 监听搜索到新设备的事件           |
-| [wx.onBluetoothAdapterStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.onBluetoothAdapterStateChange.html)   | 监听蓝牙适配器状态变化事件         |
-| [wx.offBluetoothDeviceFound](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.offBluetoothDeviceFound.html)               | 移除搜索到新设备的事件的全部监听函数    |
-| [wx.offBluetoothAdapterStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.offBluetoothAdapterStateChange.html) | 移除蓝牙适配器状态变化事件的全部监听函数  |
-| [wx.makeBluetoothPair](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.makeBluetoothPair.html)                           | 蓝牙配对接口，仅安卓支持          |
-| [wx.isBluetoothDevicePaired](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.isBluetoothDevicePaired.html)               | 查询蓝牙设备是否配对，仅安卓支持      |
-| [wx.getConnectedBluetoothDevices](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.getConnectedBluetoothDevices.html)     | 根据主服务 UUID 获取已连接的蓝牙设备 |
-| [wx.getBluetoothDevices](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.getBluetoothDevices.html)                       | 获取在蓝牙模块生效期间所有搜索到的蓝牙设备 |
-| [wx.getBluetoothAdapterState](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.getBluetoothAdapterState.html)             | 获取本机蓝牙适配器状态           |
-| [wx.closeBluetoothAdapter](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.closeBluetoothAdapter.html)                   | 关闭蓝牙模块                |
-
-### 蓝牙-低功耗中心设备
-| API                                                                                                                                                           | 功能                                                         |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| [wx.writeBLECharacteristicValue](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.writeBLECharacteristicValue.html)               | 向蓝牙低功耗设备特征值中写入二进制数据                                        |
-| [wx.setBLEMTU](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.setBLEMTU.html)                                                   | 协商设置蓝牙低功耗的最大传输单元 (Maximum Transmission Unit, MTU)          |
-| [wx.readBLECharacteristicValue](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.readBLECharacteristicValue.html)                 | 读取蓝牙低功耗设备特征值的二进制数据                                         |
-| [wx.onBLEMTUChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.onBLEMTUChange.html)                                         | 监听蓝牙低功耗的最大传输单元变化事件（仅安卓触发）                                  |
-| [wx.onBLEConnectionStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.onBLEConnectionStateChange.html)                 | 监听蓝牙低功耗连接状态改变事件                                            |
-| [wx.onBLECharacteristicValueChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.onBLECharacteristicValueChange.html)         | 监听蓝牙低功耗设备的特征值变化事件                                          |
-| [wx.offBLEMTUChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.offBLEMTUChange.html)                                       | 移除蓝牙低功耗的最大传输单元变化事件的监听函数                                    |
-| [wx.offBLEConnectionStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.offBLEConnectionStateChange.html)               | 移除蓝牙低功耗连接状态改变事件的监听函数                                       |
-| [wx.offBLECharacteristicValueChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.offBLECharacteristicValueChange.html)       | 移除蓝牙低功耗设备的特征值变化事件的全部监听函数                                   |
-| [wx.notifyBLECharacteristicValueChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.notifyBLECharacteristicValueChange.html) | 启用蓝牙低功耗设备特征值变化时的 notify 功能，订阅特征                            |
-| [wx.getBLEMTU](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.getBLEMTU.html)                                                   | 获取蓝牙低功耗的最大传输单元                                             |
-| [wx.getBLEDeviceServices](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.getBLEDeviceServices.html)                             | 获取蓝牙低功耗设备所有服务 (service)                                    |
-| [wx.getBLEDeviceRSSI](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.getBLEDeviceRSSI.html)                                     | 获取蓝牙低功耗设备的信号强度 (Received Signal Strength Indication, RSSI) |
-| [wx.getBLEDeviceCharacteristics](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.getBLEDeviceCharacteristics.html)               | 获取蓝牙低功耗设备某个服务中所有特征 (characteristic)                        |
-| [wx.createBLEConnection](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.createBLEConnection.html)                               | 连接蓝牙低功耗设备                                                  |
-| [wx.closeBLEConnection](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.closeBLEConnection.html)                                 | 断开与蓝牙低功耗设备的连接                                              |
-
-### 蓝牙-低功耗外围设备
-| API                                                                                                                                                                          | 功能                        |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| [wx.onBLEPeripheralConnectionStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/wx.onBLEPeripheralConnectionStateChanged.html)   | 监听当前外围设备被连接或断开连接事件        |
-| [wx.offBLEPeripheralConnectionStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/wx.offBLEPeripheralConnectionStateChanged.html) | 移除当前外围设备被连接或断开连接事件的监听函数   |
-| [wx.createBLEPeripheralServer](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/wx.createBLEPeripheralServer.html)                           | 建立本地作为蓝牙低功耗外围设备的服务端，可创建多个 |
-| [BLEPeripheralServer](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.html)                                             | 外围设备的服务端                  |
-
-### 蓝牙-信标（Beacon）
-| API                                                                                                                             | 功能                          |
-| ------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| [wx.stopBeaconDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.stopBeaconDiscovery.html)       | 停止搜索附近的 Beacon 设备           |
-| [wx.startBeaconDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.startBeaconDiscovery.html)     | 开始搜索附近的 Beacon 设备           |
-| [wx.onBeaconUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.onBeaconUpdate.html)                 | 监听 Beacon 设备更新事件，仅能注册一个监听   |
-| [wx.onBeaconServiceChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.onBeaconServiceChange.html)   | 监听 Beacon 服务状态变化事件，仅能注册一个监听 |
-| [wx.offBeaconUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.offBeaconUpdate.html)               | 移除 Beacon 设备更新事件的全部监听函数     |
-| [wx.offBeaconServiceChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.offBeaconServiceChange.html) | 移除 Beacon 服务状态变化事件的全部监听函数   |
-| [wx.getBeacons](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.getBeacons.html)                         | 获取所有已搜索到的 Beacon 设备         |
-| [BeaconInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/BeaconInfo.html)                               | Beacon 设备                   |
-
-### NFC读写
-| API                                                                                                                                             | 功能                                         |
-| ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| [wx.removeSecureElementPass](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.removeSecureElementPass.html)                   | 删除设备中的某一张卡                                 |
-| [wx.getSecureElementPasses](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.getSecureElementPasses.html)                     | 获取设备中的所有卡信息                                |
-| [wx.getNFCAdapter](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.getNFCAdapter.html)                                       | 获取 NFC 实例                                  |
-| [wx.canAddSecureElementPass](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.canAddSecureElementPass.html)                   | 判断设备是否支持添加该支付卡                             |
-| [wx.addPaymentPassGetCertificateData](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.addPaymentPassGetCertificateData.html) | 拉起ApplePay添加卡流程，从PassKit获取证书、nonce与nonce签名 |
-| [wx.addPaymentPassFinish](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.addPaymentPassFinish.html)                         | 通知客户端开卡成功                                  |
-| [IsoDep](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/IsoDep.html)                                                           | IsoDep 标签                                  |
-| [MifareClassic](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareClassic.html)                                             | MifareClassic 标签                           |
-| [MifareUltralight](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareUltralight.html)                                       | MifareUltralight 标签                        |
-| [Ndef](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/Ndef.html)                                                               | Ndef 标签                                    |
-| [NfcA](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcA.html)                                                               | NfcA 标签                                    |
-
-
-#### NFCAdapter
-
-| API                                                                                                                                   | 功能                                              |
-| ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| [NFCAdapter.getIsoDep](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getIsoDep.html)                     | 获取IsoDep实例，实例支持ISO-DEP (ISO 14443-4)标准的读写       |
-| [NFCAdapter.getMifareClassic](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getMifareClassic.html)       | 获取MifareClassic实例，实例支持MIFARE Classic标签的读写       |
-| [NFCAdapter.getMifareUltralight](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getMifareUltralight.html) | 获取MifareUltralight实例，实例支持MIFARE Ultralight标签的读写 |
-| [NFCAdapter.getNdef](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getNdef.html)                         | 获取Ndef实例，实例支持对NDEF格式的NFC标签上的NDEF数据的读写           |
-| [NFCAdapter.getNfcA](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getNfcA.html)                         | 获取NfcA实例，实例支持NFC-A (ISO 14443-3A)标准的读写          |
-| [NFCAdapter.getNfcB](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getNfcB.html)                         | 获取NfcB实例，实例支持NFC-B (ISO 14443-3B)标准的读写          |
-| [NFCAdapter.getNfcF](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getNfcF.html)                         | 获取NfcF实例，实例支持NFC-F (JIS 6319-4)标准的读写            |
-| [NFCAdapter.getNfcV](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getNfcV.html)                         | 获取NfcV实例，实例支持NFC-V (ISO 15693)标准的读写             |
-| [NFCAdapter.offDiscovered](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.offDiscovered.html)             | 移除 NFC Tag的监听函数                                 |
-| [NFCAdapter.onDiscovered](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.onDiscovered.html)               | 监听 NFC Tag                                      |
-| [NFCAdapter.startDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.startDiscovery.html)           |                                                 |
-| [NFCAdapter.stopDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.stopDiscovery.html)             |                                                 |
-| [NfcB](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcB.html)                                                     | NfcB 标签                                         |
-| [NfcF](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcF.html)                                                     | NfcF 标签                                         |
-| [NfcV](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcV.html)                                                     | NfcV 标签                                         |
-### WIFI
-| API                                                                                                                                            | 功能                       |
-| ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
-| [wx.stopWifi](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.stopWifi.html)                                               | 关闭 Wi-Fi 模块              |
-| [wx.startWifi](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.startWifi.html)                                             | 初始化 Wi-Fi 模块             |
-| [wx.setWifiList](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.setWifiList.html)                                         | 设置 `wifiList` 中 AP 的相关信息 |
-| [wx.onWifiConnectedWithPartialInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.onWifiConnectedWithPartialInfo.html)   | 监听连接上 Wi-Fi 的事件          |
-| [wx.onWifiConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.onWifiConnected.html)                                 | 监听连接上 Wi-Fi 的事件          |
-| [wx.onGetWifiList](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.onGetWifiList.html)                                     | 监听获取到 Wi-Fi 列表数据事件       |
-| [wx.offWifiConnectedWithPartialInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.offWifiConnectedWithPartialInfo.html) | 移除连接上 Wi-Fi 的事件的监听函数     |
-| [wx.offWifiConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.offWifiConnected.html)                               | 移除连接上 Wi-Fi 的事件的监听函数     |
-| [wx.offGetWifiList](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.offGetWifiList.html)                                   | 移除获取到 Wi-Fi 列表数据事件的监听函数  |
-| [wx.getWifiList](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.getWifiList.html)                                         | 请求获取 Wi-Fi 列表            |
-| [wx.getConnectedWifi](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.getConnectedWifi.html)                               | 获取已连接中的 Wi-Fi 信息         |
-| [wx.connectWifi](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.connectWifi.html)                                         | 连接 Wi-Fi                 |
-| [WifiInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/WifiInfo.html)                                                     | Wifi 信息                  |
-
-### 日历
-| API                                                                                                                              | 功能          |
-| -------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| [wx.addPhoneRepeatCalendar](https://developers.weixin.qq.com/miniprogram/dev/api/device/calendar/wx.addPhoneRepeatCalendar.html) | 向系统日历添加重复事件 |
-| [wx.addPhoneCalendar](https://developers.weixin.qq.com/miniprogram/dev/api/device/calendar/wx.addPhoneCalendar.html)             | 向系统日历添加事件   |
-### 联系人
-| API                                                                                                               | 功能            |
-| ----------------------------------------------------------------------------------------------------------------- | ------------- |
-| [wx.chooseContact](https://developers.weixin.qq.com/miniprogram/dev/api/device/contact/wx.chooseContact.html)     | 拉起手机通讯录，选择联系人 |
-| [wx.addPhoneContact](https://developers.weixin.qq.com/miniprogram/dev/api/device/contact/wx.addPhoneContact.html) | 添加手机通讯录联系人    |
-### 无障碍
-| API                                                                                                                                       | 功能            |
-| ----------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| [wx.checkIsOpenAccessibility](https://developers.weixin.qq.com/miniprogram/dev/api/device/accessibility/wx.checkIsOpenAccessibility.html) | 检测是否开启视觉无障碍功能 |
-### 电量
-| API                                                                                                                         | 功能                                                                                                                    |
-| --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [wx.onBatteryInfoChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/battery/wx.onBatteryInfoChange.html)   | 监听电池信息变化事件，目前只支持监听省电模式的切换                                                                                             |
-| [wx.offBatteryInfoChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/battery/wx.offBatteryInfoChange.html) | 移除电池信息变化事件的监听函数                                                                                                       |
-| [wx.getBatteryInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/device/battery/wx.getBatteryInfoSync.html)     | [wx.getBatteryInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/battery/wx.getBatteryInfo.html) 的同步版本 |
-| [wx.getBatteryInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/battery/wx.getBatteryInfo.html)             | 获取设备电池信息                                                                                                              |
-### 剪贴板
-| API                                                                                                                   | 功能         |
-| --------------------------------------------------------------------------------------------------------------------- | ---------- |
-| [wx.setClipboardData](https://developers.weixin.qq.com/miniprogram/dev/api/device/clipboard/wx.setClipboardData.html) | 设置系统剪贴板的内容 |
-| [wx.getClipboardData](https://developers.weixin.qq.com/miniprogram/dev/api/device/clipboard/wx.getClipboardData.html) | 获取系统剪贴板的内容 |
-### NFC主机卡模拟
-| API                                                                                                             | 功能                   |
-| --------------------------------------------------------------------------------------------------------------- | -------------------- |
-| [wx.stopHCE](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.stopHCE.html)               | 关闭 NFC 模块            |
-| [wx.startHCE](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.startHCE.html)             | 初始化 NFC 模块           |
-| [wx.sendHCEMessage](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.sendHCEMessage.html) | 发送 NFC 消息            |
-| [wx.onHCEMessage](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.onHCEMessage.html)     | 监听接收 NFC 设备消息事件      |
-| [wx.offHCEMessage](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.offHCEMessage.html)   | 移除接收 NFC 设备消息事件的监听函数 |
-| [wx.getHCEState](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.getHCEState.html)       | 判断当前设备是否支持 HCE 能力    |
-
-### 网络
-| API                                                                                                                             | 功能              |
-| ------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| [wx.onNetworkWeakChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.onNetworkWeakChange.html)       | 监听弱网状态变化事件      |
-| [wx.onNetworkStatusChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.onNetworkStatusChange.html)   | 监听网络状态变化事件      |
-| [wx.offNetworkWeakChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.offNetworkWeakChange.html)     | 移除弱网状态变化事件的监听函数 |
-| [wx.offNetworkStatusChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.offNetworkStatusChange.html) | 移除网络状态变化事件的监听函数 |
-| [wx.getNetworkType](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.getNetworkType.html)                 | 获取网络类型          |
-| [wx.getLocalIPAddress](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.getLocalIPAddress.html)           | 获取局域网IP地址       |
-### 加密
-| API                                                                                                              | 功能         |
-| ---------------------------------------------------------------------------------------------------------------- | ---------- |
-| [wx.getRandomValues](https://developers.weixin.qq.com/miniprogram/dev/api/device/crypto/wx.getRandomValues.html) | 获取密码学安全随机数 |
-### 屏幕
-| API                                                                                                                                            | 功能                                  |
-| ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| [wx.setVisualEffectOnCapture](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.setVisualEffectOnCapture.html)             | 设置截屏/录屏时屏幕表现                        |
-| [wx.setScreenBrightness](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.setScreenBrightness.html)                       | 设置屏幕亮度                              |
-| [wx.setKeepScreenOn](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.setKeepScreenOn.html)                               | 设置是否保持常亮状态                          |
-| [wx.onUserCaptureScreen](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.onUserCaptureScreen.html)                       | 监听用户主动截屏事件                          |
-| [wx.onScreenRecordingStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.onScreenRecordingStateChanged.html)   | 监听用户录屏事件                            |
-| [wx.onGeneratePoster](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.onGeneratePoster.html)                             | 监听用户截屏之后需要开发者生成自定义海报事件，在点击转发截图按钮时触发 |
-| [wx.offUserCaptureScreen](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.offUserCaptureScreen.html)                     | 用户主动截屏事件                            |
-| [wx.offScreenRecordingStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.offScreenRecordingStateChanged.html) | 移除用户录屏事件的监听函数                       |
-| [wx.offGeneratePoster](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.offGeneratePoster.html)                           | 用户截屏之后需要开发者生成自定义海报事件                |
-| [wx.getScreenRecordingState](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.getScreenRecordingState.html)               | 查询用户是否在录屏                           |
-| [wx.getScreenBrightness](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.getScreenBrightness.html)                       | 获取屏幕亮度                              |
-### 键盘
-| API                                                                                                                                | 功能                                      |
-| ---------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| [wx.onKeyUp](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.onKeyUp.html)                                 | 监听小程序全局键盘按键弹起事件                         |
-| [wx.onKeyDown](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.onKeyDown.html)                             | 监听小程序全局键盘按键按下事件                         |
-| [wx.onKeyboardHeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.onKeyboardHeightChange.html)   | 监听键盘高度变化事件                              |
-| [wx.offKeyUp](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.offKeyUp.html)                               | 移除小程序全局键盘按键弹起事件的监听函数                    |
-| [wx.offKeyDown](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.offKeyDown.html)                           | 移除小程序全局键盘按键按下事件的监听函数                    |
-| [wx.offKeyboardHeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.offKeyboardHeightChange.html) | 移除键盘高度变化事件的监听函数                         |
-| [wx.hideKeyboard](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.hideKeyboard.html)                       | 在input、textarea等focus拉起键盘之后，手动调用此接口收起键盘 |
-| [wx.getSelectedTextRange](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.getSelectedTextRange.html)       | 在input、textarea等focus之后，获取输入框的光标位置      |
-### 电话
-| API                                                                                                         | 功能   |
-| ----------------------------------------------------------------------------------------------------------- | ---- |
-| [wx.makePhoneCall](https://developers.weixin.qq.com/miniprogram/dev/api/device/phone/wx.makePhoneCall.html) | 拨打电话 |
-### 加速计
-| API                                                                                                                                   | 功能             |
-| ------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| [wx.stopAccelerometer](https://developers.weixin.qq.com/miniprogram/dev/api/device/accelerometer/wx.stopAccelerometer.html)           | 停止监听加速度数据      |
-| [wx.startAccelerometer](https://developers.weixin.qq.com/miniprogram/dev/api/device/accelerometer/wx.startAccelerometer.html)         | 开始监听加速度数据      |
-| [wx.onAccelerometerChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/accelerometer/wx.onAccelerometerChange.html)   | 监听加速度数据事件      |
-| [wx.offAccelerometerChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/accelerometer/wx.offAccelerometerChange.html) | 移除加速度数据事件的监听函数 |
-### 罗盘
-| API                                                                                                                 | 功能              |
-| ------------------------------------------------------------------------------------------------------------------- | --------------- |
-| [wx.stopCompass](https://developers.weixin.qq.com/miniprogram/dev/api/device/compass/wx.stopCompass.html)           | 停止监听罗盘数据        |
-| [wx.startCompass](https://developers.weixin.qq.com/miniprogram/dev/api/device/compass/wx.startCompass.html)         | 开始监听罗盘数据        |
-| [wx.onCompassChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/compass/wx.onCompassChange.html)   | 监听罗盘数据变化事件      |
-| [wx.offCompassChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/compass/wx.offCompassChange.html) | 移除罗盘数据变化事件的监听函数 |
-### 设备方向
-| API                                                                                                                                    | 功能              |
-| -------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| [wx.stopDeviceMotionListening](https://developers.weixin.qq.com/miniprogram/dev/api/device/motion/wx.stopDeviceMotionListening.html)   | 停止监听设备方向的变化     |
-| [wx.startDeviceMotionListening](https://developers.weixin.qq.com/miniprogram/dev/api/device/motion/wx.startDeviceMotionListening.html) | 开始监听设备方向的变化     |
-| [wx.onDeviceMotionChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/motion/wx.onDeviceMotionChange.html)             | 监听设备方向变化事件      |
-| [wx.offDeviceMotionChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/motion/wx.offDeviceMotionChange.html)           | 移除设备方向变化事件的监听函数 |
-### 陀螺仪
-| API                                                                                                                       | 功能               |
-| ------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| [wx.stopGyroscope](https://developers.weixin.qq.com/miniprogram/dev/api/device/gyroscope/wx.stopGyroscope.html)           | 停止监听陀螺仪数据        |
-| [wx.startGyroscope](https://developers.weixin.qq.com/miniprogram/dev/api/device/gyroscope/wx.startGyroscope.html)         | 开始监听陀螺仪数据        |
-| [wx.onGyroscopeChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/gyroscope/wx.onGyroscopeChange.html)   | 监听陀螺仪数据变化事件      |
-| [wx.offGyroscopeChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/gyroscope/wx.offGyroscopeChange.html) | 移除陀螺仪数据变化事件的监听函数 |
-
-### 内存
-| API                                                                                                                | 功能              |
-| ------------------------------------------------------------------------------------------------------------------ | --------------- |
-| [wx.onMemoryWarning](https://developers.weixin.qq.com/miniprogram/dev/api/device/memory/wx.onMemoryWarning.html)   | 监听内存不足告警事件      |
-| [wx.offMemoryWarning](https://developers.weixin.qq.com/miniprogram/dev/api/device/memory/wx.offMemoryWarning.html) | 移除内存不足告警事件的监听函数 |
-### 扫码
-| API                                                                                              | 功能            |
-| ------------------------------------------------------------------------------------------------ | ------------- |
-| [wx.scanCode](https://developers.weixin.qq.com/miniprogram/dev/api/device/scan/wx.scanCode.html) | 调起客户端扫码界面进行扫码 |
-### 短信
-| API                                                                                           | 功能         |
-| --------------------------------------------------------------------------------------------- | ---------- |
-| [wx.sendSms](https://developers.weixin.qq.com/miniprogram/dev/api/device/sms/wx.sendSms.html) | 拉起手机发送短信界面 |
-### 振动
-| API                                                                                                         | 功能                   |
-| ----------------------------------------------------------------------------------------------------------- | -------------------- |
-| [wx.vibrateShort](https://developers.weixin.qq.com/miniprogram/dev/api/device/vibrate/wx.vibrateShort.html) | 使手机发生较短时间的振动（15 ms）  |
-| [wx.vibrateLong](https://developers.weixin.qq.com/miniprogram/dev/api/device/vibrate/wx.vibrateLong.html)   | 使手机发生较长时间的振动（400 ms) |
-
-## AI
-
-### AI推理
-| API                                                                                                                           | 功能                                                                                                                                                    |
-| ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.getInferenceEnvInfo](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/wx.getInferenceEnvInfo.html)       | 获取通用AI推理引擎版本                                                                                                                                          |
-| [wx.createInferenceSession](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/wx.createInferenceSession.html) | 创建 AI 推理 Session                                                                                                                                      |
-| [InferenceSession](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/InferenceSession.html)                   | 推理 Session 实例，通过[wx.createInferenceSession](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/wx.createInferenceSession.html) 接口获取该实例 |
-| [Tensor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/Tensor.html)                                       | Tensor                                                                                                                                                |
-| [Tensors](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/Tensors.html)                                     | Tensors 是 key-value 形式的对象，对象的 key 会作为 input/output name，对象的 value 则是 Tensor                                                                           |
-
-### 视觉算法
-
-| API                                                                                                             | 功能                   |
-| --------------------------------------------------------------------------------------------------------------- | -------------------- |
-| [wx.isVKSupport](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/wx.isVKSupport.html)         | 判断支持版本               |
-| [wx.createVKSession](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/wx.createVKSession.html) | 创建 vision kit 会话对象   |
-| [VKBodyAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKBodyAnchor.html)             | 人体 anchor            |
-| [VKCamera](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKCamera.html)                     | 相机对象                 |
-| [VKDepthAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKDepthAnchor.html)           | depth anchor         |
-| [VKFaceAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKFaceAnchor.html)             | 人脸 anchor            |
-| [VKFrame](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKFrame.html)                       | vision kit 会话对象      |
-| [VKHandAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKHandAnchor.html)             | 手势 anchor            |
-| [VKMarkerAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKMarkerAnchor.html)         | marker anchor        |
-| [VKOCRAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKOCRAnchor.html)               | OCR anchor           |
-| [VKOSDAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKOSDAnchor.html)               | OSD anchor           |
-| [VKPlaneAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKPlaneAnchor.html)           | 平面 anchor，只有 v2 版本支持 |
-| [VKSession](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.html)                   | vision kit 会话对象      |
-### 人脸检测
-| API                                                                                                      | 功能                                                    |
-| -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| [wx.stopFaceDetect](https://developers.weixin.qq.com/miniprogram/dev/api/ai/face/wx.stopFaceDetect.html) | 停止人脸检测                                                |
-| [wx.initFaceDetect](https://developers.weixin.qq.com/miniprogram/dev/api/ai/face/wx.initFaceDetect.html) | 初始化人脸检测                                               |
-| [wx.faceDetect](https://developers.weixin.qq.com/miniprogram/dev/api/ai/face/wx.faceDetect.html)         | 人脸检测，使用前需要通过 wx.initFaceDetect 进行一次初始化，推荐使用相机接口返回的帧数据 |
-## Worker
-
-| API                                                                                                 | 功能                                                                                                                                                       |
-| --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [wx.createWorker](https://developers.weixin.qq.com/miniprogram/dev/api/worker/wx.createWorker.html) | 创建一个 Worker 线程                                                                                                                                           |
-| [Worker](https://developers.weixin.qq.com/miniprogram/dev/api/worker/Worker.html)                   | Worker 实例，主线程中可通过 [wx.createWorker](https://developers.weixin.qq.com/miniprogram/dev/api/worker/wx.createWorker.html) 接口获取，worker 线程中可通过全局变量 `worker` 获取 |
-
-
-## WXML
-
-| API                                                                                                                           | 功能                                                                |
-| ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| [wx.createSelectorQuery](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/wx.createSelectorQuery.html)               | 返回一个 SelectorQuery 对象实例                                           |
-| [wx.createIntersectionObserver](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/wx.createIntersectionObserver.html) | 创建并返回一个 IntersectionObserver 对象实例                                 |
-| [IntersectionObserver](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/IntersectionObserver.html)                   | IntersectionObserver 对象，用于推断某些节点是否可以被用户看见、有多大比例可以被用户看见            |
-| [MediaQueryObserver](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/MediaQueryObserver.html)                       | MediaQueryObserver 对象，用于监听页面 media query 状态的变化，如界面的长宽是不是在某个指定的范围内 |
-| [NodesRef](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/NodesRef.html)                                           | 用于获取 WXML 节点信息的对象                                                 |
-| [SelectorQuery](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/SelectorQuery.html)                                 | 查询节点信息的对象                                                         |
-
-## 第三方平台
-
-
-
-| API                                                                                                      | 功能                                                                                                     |
-| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| [wx.getExtConfigSync](https://developers.weixin.qq.com/miniprogram/dev/api/ext/wx.getExtConfigSync.html) | [wx.getExtConfig](https://developers.weixin.qq.com/miniprogram/dev/api/ext/wx.getExtConfig.html) 的同步版本 |
-| [wx.getExtConfig](https://developers.weixin.qq.com/miniprogram/dev/api/ext/wx.getExtConfig.html)         | 获取[第三方平台](https://developers.weixin.qq.com/miniprogram/dev/devtools/ext.html)自定义的数据字段                  |
-
-
-
-## 广告
-
-| API                                                                                                               | 功能           |
-| ----------------------------------------------------------------------------------------------------------------- | ------------ |
-| [wx.getShowSplashAdStatus](https://developers.weixin.qq.com/miniprogram/dev/api/ad/wx.getShowSplashAdStatus.html) | 获取封面广告组件展示状态 |
-| [wx.createRewardedVideoAd](https://developers.weixin.qq.com/miniprogram/dev/api/ad/wx.createRewardedVideoAd.html) | 创建激励视频广告组件   |
-| [wx.createInterstitialAd](https://developers.weixin.qq.com/miniprogram/dev/api/ad/wx.createInterstitialAd.html)   | 创建插屏广告组件     |
-| [InterstitialAd](https://developers.weixin.qq.com/miniprogram/dev/api/ad/InterstitialAd.html)                     | 插屏广告组件       |
-| [RewardedVideoAd](https://developers.weixin.qq.com/miniprogram/dev/api/ad/RewardedVideoAd.html)                   | 激励视频广告组件     |
-
-
-
-
-## Skyline
-
-| API                                                                                                              | 功能                                                                                                                                                                                                                                         |
-| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [DraggableSheetContext](https://developers.weixin.qq.com/miniprogram/dev/api/skyline/DraggableSheetContext.html) | DraggableSheet 实例，可通过 [wx.createSelectorQuery](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/wx.createSelectorQuery.html) 的 [NodesRef.node](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/NodesRef.node.html) 方法获取 |
-| [OpenContainer](https://developers.weixin.qq.com/miniprogram/dev/api/skyline/OpenContainer.html)                 | OpenContainer 实例，可通过 [SelectorQuery](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/SelectorQuery.html) 获取                                                                                                                      |
-| [Snapshot](https://developers.weixin.qq.com/miniprogram/dev/api/skyline/Snapshot.html)                           | Snapshot 实例，可通过 [SelectorQuery](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/SelectorQuery.html) 获取                                                                                                                           |
+# 微信开放文档 / 小程序 API 目录
+
+> 来源：[API](https://developers.weixin.qq.com/miniprogram/dev/api/)
+> 整理日期：2026-05-29
+> 整理范围：仅限小程序顶部导航「开发」栏目；不整理顶部「介绍 / 设计 / 运营 / 数据 / 安全」大类。
+
+## 定位
+
+整理小程序客户端 API 参考文档，覆盖基础、路由、跳转、界面、网络、支付、缓存、媒体、位置、文件、开放接口、设备、AI、Worker、WXML、广告、Skyline、XR-FRAME 等 API。
+
+## 覆盖统计
+
+| 分组 | 官方入口 | 导航项 | 本地 API 文档 |
+| --- | --- | ---: | ---: |
+| API | [API](https://developers.weixin.qq.com/miniprogram/dev/api/) | 1672 | 1462 |
+
+## 一级分组
+
+| 分组 | 本地目录 | 官方入口 | API 页面数 |
+| --- | --- | --- | ---: |
+| 基础 | [基础目录](1.基础/基础目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/base/wx.env.html) | 123 |
+| 路由 | [路由目录](2.路由/路由目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.switchTab.html) | 15 |
+| 跳转 | [跳转目录](3.跳转/跳转目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.restartMiniProgram.html) | 11 |
+| 聊天工具 | [聊天工具目录](4.聊天工具/聊天工具目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareVideoToGroup.html) | 10 |
+| 转发 | [转发目录](5.转发/转发目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.updateShareMenu.html) | 11 |
+| 界面 | [界面目录](6.界面/界面目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showToast.html) | 99 |
+| 网络 | [网络目录](7.网络/网络目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/wx.request.html) | 77 |
+| 支付 | [支付目录](8.支付/支付目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestVirtualPayment.html) | 13 |
+| 数据缓存 | [数据缓存目录](9.数据缓存/数据缓存目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.setStorageSync.html) | 35 |
+| 数据分析 | [数据分析目录](10.数据分析/数据分析目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.reportMonitor.html) | 5 |
+| 画布 | [画布目录](11.画布/画布目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.createOffscreenCanvas.html) | 76 |
+| 媒体 | [媒体目录](12.媒体/媒体目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/wx.createMapContext.html) | 311 |
+| 位置 | [位置目录](13.位置/位置目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.stopLocationUpdate.html) | 12 |
+| 文件 | [文件目录](14.文件/文件目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/file/wx.saveFileToDisk.html) | 55 |
+| 开放接口 | [开放接口目录](15.开放接口/开放接口目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.pluginLogin.html) | 57 |
+| 设备 | [设备目录](16.设备/设备目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.stopBluetoothDevicesDiscovery.html) | 220 |
+| AI | [AI 目录](17.AI/AI目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/wx.getInferenceEnvInfo.html) | 58 |
+| Worker | [Worker 目录](18.Worker/Worker目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/worker/wx.createWorker.html) | 9 |
+| WXML | [WXML 目录](19.WXML/WXML目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/wx.createSelectorQuery.html) | 23 |
+| 第三方平台 | [第三方平台目录](20.第三方平台/第三方平台目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/ext/wx.getExtConfigSync.html) | 2 |
+| 广告 | [广告目录](21.广告/广告目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/ad/wx.getShowSplashAdStatus.html) | 23 |
+| Skyline | [Skyline 目录](22.Skyline/Skyline目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/skyline/DraggableSheetContext.scrollTo.html) | 5 |
+| XR-FRAME | [XR-FRAME 目录](23.XR-FRAME/XR-FRAME目录.md) | [官方入口](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html) | 212 |
+
+## 本地正文
+
+- 已按官方左侧导航补齐 23 个 API 一级分类目录。
+- 已按官方 URL 层级生成 1462 个 API 正文文档，分类目录中的条目均链接到本地 Markdown。
+- 每个 API 文档保留官方文档链接、所属分类、导航路径，并整理功能描述、参数、返回值、回调、错误码、版本限制、注意事项和示例等开发信息。
+
+## 官方完整目录
+
+- [基础](https://developers.weixin.qq.com/miniprogram/dev/api/base/wx.env.html)
+  - [wx.env](https://developers.weixin.qq.com/miniprogram/dev/api/base/wx.env.html)
+  - [wx.canIUse](https://developers.weixin.qq.com/miniprogram/dev/api/base/wx.canIUse.html)
+  - [wx.base64ToArrayBuffer](https://developers.weixin.qq.com/miniprogram/dev/api/base/wx.base64ToArrayBuffer.html)
+  - [wx.arrayBufferToBase64](https://developers.weixin.qq.com/miniprogram/dev/api/base/wx.arrayBufferToBase64.html)
+  - [系统](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.openSystemBluetoothSetting.html)
+    - [wx.openSystemBluetoothSetting](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.openSystemBluetoothSetting.html)
+    - [wx.openAppAuthorizeSetting](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.openAppAuthorizeSetting.html)
+    - [wx.getWindowInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getWindowInfo.html)
+    - [wx.getSystemSetting](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSystemSetting.html)
+    - [wx.getSystemInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSystemInfoSync.html)
+    - [wx.getSystemInfoAsync](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSystemInfoAsync.html)
+    - [wx.getSystemInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSystemInfo.html)
+    - [wx.getSkylineInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSkylineInfoSync.html)
+    - [wx.getSkylineInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSkylineInfo.html)
+    - [wx.getRendererUserAgent](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getRendererUserAgent.html)
+    - [wx.getDeviceInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getDeviceInfo.html)
+    - [wx.getDeviceBenchmarkInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getDeviceBenchmarkInfo.html)
+    - [wx.getAppBaseInfo](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getAppBaseInfo.html)
+    - [wx.getAppAuthorizeSetting](https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getAppAuthorizeSetting.html)
+  - [更新](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/wx.updateWeChatApp.html)
+    - [wx.updateWeChatApp](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/wx.updateWeChatApp.html)
+    - [wx.getUpdateManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/wx.getUpdateManager.html)
+    - [UpdateManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/UpdateManager.html)
+      - [UpdateManager.applyUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/UpdateManager.applyUpdate.html)
+      - [UpdateManager.onCheckForUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/UpdateManager.onCheckForUpdate.html)
+      - [UpdateManager.onUpdateFailed](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/UpdateManager.onUpdateFailed.html)
+      - [UpdateManager.onUpdateReady](https://developers.weixin.qq.com/miniprogram/dev/api/base/update/UpdateManager.onUpdateReady.html)
+  - [小程序](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.onApiCategoryChange.html)
+    - [生命周期](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.onApiCategoryChange.html)
+      - [wx.onApiCategoryChange](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.onApiCategoryChange.html)
+      - [wx.offApiCategoryChange](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.offApiCategoryChange.html)
+      - [wx.getLaunchOptionsSync](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.getLaunchOptionsSync.html)
+      - [wx.getEnterOptionsSync](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.getEnterOptionsSync.html)
+      - [wx.getApiCategory](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/life-cycle/wx.getApiCategory.html)
+    - [应用级事件](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.postMessageToReferrerPage.html)
+      - [wx.postMessageToReferrerPage](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.postMessageToReferrerPage.html)
+      - [wx.postMessageToReferrerMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.postMessageToReferrerMiniProgram.html)
+      - [wx.onUnhandledRejection](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onUnhandledRejection.html)
+      - [wx.onThemeChange](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onThemeChange.html)
+      - [wx.onPageNotFound](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onPageNotFound.html)
+      - [wx.onLazyLoadError](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onLazyLoadError.html)
+      - [wx.onError](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onError.html)
+      - [wx.onAudioInterruptionEnd](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onAudioInterruptionEnd.html)
+      - [wx.onAudioInterruptionBegin](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onAudioInterruptionBegin.html)
+      - [wx.onAppShow](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onAppShow.html)
+      - [wx.onAppHide](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.onAppHide.html)
+      - [wx.offUnhandledRejection](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offUnhandledRejection.html)
+      - [wx.offThemeChange](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offThemeChange.html)
+      - [wx.offPageNotFound](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offPageNotFound.html)
+      - [wx.offLazyLoadError](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offLazyLoadError.html)
+      - [wx.offError](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offError.html)
+      - [wx.offAudioInterruptionEnd](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offAudioInterruptionEnd.html)
+      - [wx.offAudioInterruptionBegin](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offAudioInterruptionBegin.html)
+      - [wx.offAppShow](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offAppShow.html)
+      - [wx.offAppHide](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-event/wx.offAppHide.html)
+    - [路由事件](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onBeforePageUnload.html)
+      - [wx.onBeforePageUnload](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onBeforePageUnload.html)
+      - [wx.onBeforePageLoad](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onBeforePageLoad.html)
+      - [wx.onBeforeAppRoute](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onBeforeAppRoute.html)
+      - [wx.onAppRouteDone](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onAppRouteDone.html)
+      - [wx.onAppRoute](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onAppRoute.html)
+      - [wx.onAfterPageUnload](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onAfterPageUnload.html)
+      - [wx.onAfterPageLoad](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.onAfterPageLoad.html)
+      - [wx.offBeforePageUnload](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offBeforePageUnload.html)
+      - [wx.offBeforePageLoad](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offBeforePageLoad.html)
+      - [wx.offBeforeAppRoute](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offBeforeAppRoute.html)
+      - [wx.offAppRouteDone](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offAppRouteDone.html)
+      - [wx.offAppRoute](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offAppRoute.html)
+      - [wx.offAfterPageUnload](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offAfterPageUnload.html)
+      - [wx.offAfterPageLoad](https://developers.weixin.qq.com/miniprogram/dev/api/base/app/app-route/wx.offAfterPageLoad.html)
+  - [调试](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/wx.setEnableDebug.html)
+    - [wx.setEnableDebug](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/wx.setEnableDebug.html)
+    - [wx.getRealtimeLogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/wx.getRealtimeLogManager.html)
+    - [wx.getLogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/wx.getLogManager.html)
+    - [console](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/console.html)
+      - [console.debug](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/console.debug.html)
+      - [console.error](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/console.error.html)
+      - [console.group](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/console.group.html)
+      - [console.groupEnd](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/console.groupEnd.html)
+      - [console.info](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/console.info.html)
+      - [console.log](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/console.log.html)
+      - [console.warn](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/console.warn.html)
+    - [LogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/LogManager.html)
+      - [LogManager.debug](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/LogManager.debug.html)
+      - [LogManager.info](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/LogManager.info.html)
+      - [LogManager.log](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/LogManager.log.html)
+      - [LogManager.warn](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/LogManager.warn.html)
+    - [RealtimeLogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeLogManager.html)
+      - [RealtimeLogManager.addFilterMsg](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeLogManager.addFilterMsg.html)
+      - [RealtimeLogManager.error](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeLogManager.error.html)
+      - [RealtimeLogManager.getCurrentState](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeLogManager.getCurrentState.html)
+      - [RealtimeLogManager.in](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeLogManager.in.html)
+      - [RealtimeLogManager.info](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeLogManager.info.html)
+      - [RealtimeLogManager.setFilterMsg](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeLogManager.setFilterMsg.html)
+      - [RealtimeLogManager.tag](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeLogManager.tag.html)
+      - [RealtimeLogManager.warn](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeLogManager.warn.html)
+    - [RealtimeTagLogManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeTagLogManager.html)
+      - [RealtimeTagLogManager.addFilterMsg](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeTagLogManager.addFilterMsg.html)
+      - [RealtimeTagLogManager.error](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeTagLogManager.error.html)
+      - [RealtimeTagLogManager.info](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeTagLogManager.info.html)
+      - [RealtimeTagLogManager.setFilterMsg](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeTagLogManager.setFilterMsg.html)
+      - [RealtimeTagLogManager.warn](https://developers.weixin.qq.com/miniprogram/dev/api/base/debug/RealtimeTagLogManager.warn.html)
+  - [性能](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.requestIdleCallback.html)
+    - [wx.requestIdleCallback](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.requestIdleCallback.html)
+    - [wx.reportPerformance](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.reportPerformance.html)
+    - [wx.preloadWebview](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.preloadWebview.html)
+    - [wx.preloadSkylineView](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.preloadSkylineView.html)
+    - [wx.preloadAssets](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.preloadAssets.html)
+    - [wx.getPerformance](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.getPerformance.html)
+    - [wx.cancelIdleCallback](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/wx.cancelIdleCallback.html)
+    - [EntryList](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/EntryList.html)
+      - [EntryList.getEntries](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/EntryList.getEntries.html)
+      - [EntryList.getEntriesByName](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/EntryList.getEntriesByName.html)
+      - [EntryList.getEntriesByType](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/EntryList.getEntriesByType.html)
+    - [Performance](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/Performance.html)
+      - [Performance.createObserver](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/Performance.createObserver.html)
+      - [Performance.getEntries](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/Performance.getEntries.html)
+      - [Performance.getEntriesByName](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/Performance.getEntriesByName.html)
+      - [Performance.getEntriesByType](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/Performance.getEntriesByType.html)
+      - [Performance.setBufferSize](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/Performance.setBufferSize.html)
+    - [PerformanceEntry](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/PerformanceEntry.html)
+    - [PerformanceObserver](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/PerformanceObserver.html)
+      - [PerformanceObserver.disconnect](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/PerformanceObserver.disconnect.html)
+      - [PerformanceObserver.observe](https://developers.weixin.qq.com/miniprogram/dev/api/base/performance/PerformanceObserver.observe.html)
+  - [分包加载](https://developers.weixin.qq.com/miniprogram/dev/api/base/subpackage/wx.preDownloadSubpackage.html)
+    - [wx.preDownloadSubpackage](https://developers.weixin.qq.com/miniprogram/dev/api/base/subpackage/wx.preDownloadSubpackage.html)
+    - [PreDownloadSubpackageTask](https://developers.weixin.qq.com/miniprogram/dev/api/base/subpackage/PreDownloadSubpackageTask.html)
+      - [PreDownloadSubpackageTask.onProgressUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/base/subpackage/PreDownloadSubpackageTask.onProgressUpdate.html)
+  - [加密](https://developers.weixin.qq.com/miniprogram/dev/api/base/crypto/wx.getUserCryptoManager.html)
+    - [wx.getUserCryptoManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/crypto/wx.getUserCryptoManager.html)
+    - [UserCryptoManager](https://developers.weixin.qq.com/miniprogram/dev/api/base/crypto/UserCryptoManager.html)
+      - [UserCryptoManager.getLatestUserKey](https://developers.weixin.qq.com/miniprogram/dev/api/base/crypto/UserCryptoManager.getLatestUserKey.html)
+      - [UserCryptoManager.getRandomValues](https://developers.weixin.qq.com/miniprogram/dev/api/base/crypto/UserCryptoManager.getRandomValues.html)
+- [路由](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.switchTab.html)
+  - [wx.switchTab](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.switchTab.html)
+  - [wx.rewriteRoute](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.rewriteRoute.html)
+  - [wx.reLaunch](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.reLaunch.html)
+  - [wx.redirectTo](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.redirectTo.html)
+  - [wx.navigateTo](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.navigateTo.html)
+  - [wx.navigateBack](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.navigateBack.html)
+  - [EventChannel](https://developers.weixin.qq.com/miniprogram/dev/api/route/EventChannel.html)
+    - [EventChannel.emit](https://developers.weixin.qq.com/miniprogram/dev/api/route/EventChannel.emit.html)
+    - [EventChannel.off](https://developers.weixin.qq.com/miniprogram/dev/api/route/EventChannel.off.html)
+    - [EventChannel.on](https://developers.weixin.qq.com/miniprogram/dev/api/route/EventChannel.on.html)
+    - [EventChannel.once](https://developers.weixin.qq.com/miniprogram/dev/api/route/EventChannel.once.html)
+  - [自定义路由](https://developers.weixin.qq.com/miniprogram/dev/api/route/router/wx.router.html)
+    - [wx.router](https://developers.weixin.qq.com/miniprogram/dev/api/route/router/wx.router.html)
+    - [基础](https://developers.weixin.qq.com/miniprogram/dev/api/route/router/base/router.addRouteBuilder.html)
+      - [router.addRouteBuilder](https://developers.weixin.qq.com/miniprogram/dev/api/route/router/base/router.addRouteBuilder.html)
+      - [router.getRouteContext](https://developers.weixin.qq.com/miniprogram/dev/api/route/router/base/router.getRouteContext.html)
+      - [router.removeRouteBuilder](https://developers.weixin.qq.com/miniprogram/dev/api/route/router/base/router.removeRouteBuilder.html)
+- [跳转](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.restartMiniProgram.html)
+  - [wx.restartMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.restartMiniProgram.html)
+  - [wx.openOfficialAccountProfile](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.openOfficialAccountProfile.html)
+  - [wx.openOfficialAccountChat](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.openOfficialAccountChat.html)
+  - [wx.openOfficialAccountArticle](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.openOfficialAccountArticle.html)
+  - [wx.openInquiriesTopic](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.openInquiriesTopic.html)
+  - [wx.openEmbeddedMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.openEmbeddedMiniProgram.html)
+  - [wx.onEmbeddedMiniProgramHeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.onEmbeddedMiniProgramHeightChange.html)
+  - [wx.offEmbeddedMiniProgramHeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.offEmbeddedMiniProgramHeightChange.html)
+  - [wx.navigateToMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.navigateToMiniProgram.html)
+  - [wx.navigateBackMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.navigateBackMiniProgram.html)
+  - [wx.exitMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/navigate/wx.exitMiniProgram.html)
+- [聊天工具](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareVideoToGroup.html)
+  - [wx.shareVideoToGroup](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareVideoToGroup.html)
+  - [wx.shareImageToGroup](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareImageToGroup.html)
+  - [wx.shareFileToGroup](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareFileToGroup.html)
+  - [wx.shareEmojiToGroup](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareEmojiToGroup.html)
+  - [wx.shareAppMessageToGroup](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.shareAppMessageToGroup.html)
+  - [wx.selectGroupMembers](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.selectGroupMembers.html)
+  - [wx.openChatTool](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.openChatTool.html)
+  - [wx.notifyGroupMembers](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.notifyGroupMembers.html)
+  - [wx.getChatToolInfo](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.getChatToolInfo.html)
+  - [wx.enterChatToolMode](https://developers.weixin.qq.com/miniprogram/dev/api/chattool/wx.enterChatToolMode.html)
+- [转发](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.updateShareMenu.html)
+  - [wx.updateShareMenu](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.updateShareMenu.html)
+  - [wx.showShareMenu](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.showShareMenu.html)
+  - [wx.showShareImageMenu](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.showShareImageMenu.html)
+  - [wx.shareVideoMessage](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.shareVideoMessage.html)
+  - [wx.shareToOfficialAccount](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.shareToOfficialAccount.html)
+  - [wx.shareFileMessage](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.shareFileMessage.html)
+  - [wx.onCopyUrl](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.onCopyUrl.html)
+  - [wx.offCopyUrl](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.offCopyUrl.html)
+  - [wx.hideShareMenu](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.hideShareMenu.html)
+  - [wx.getShareInfo](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.getShareInfo.html)
+  - [wx.authPrivateMessage](https://developers.weixin.qq.com/miniprogram/dev/api/share/wx.authPrivateMessage.html)
+- [界面](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showToast.html)
+  - [交互](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showToast.html)
+    - [wx.showToast](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showToast.html)
+    - [wx.showModal](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showModal.html)
+    - [wx.showLoading](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showLoading.html)
+    - [wx.showActionSheet](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showActionSheet.html)
+    - [wx.hideToast](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.hideToast.html)
+    - [wx.hideLoading](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.hideLoading.html)
+    - [wx.enableAlertBeforeUnload](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.enableAlertBeforeUnload.html)
+    - [wx.disableAlertBeforeUnload](https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.disableAlertBeforeUnload.html)
+  - [导航栏](https://developers.weixin.qq.com/miniprogram/dev/api/ui/navigation-bar/wx.showNavigationBarLoading.html)
+    - [wx.showNavigationBarLoading](https://developers.weixin.qq.com/miniprogram/dev/api/ui/navigation-bar/wx.showNavigationBarLoading.html)
+    - [wx.setNavigationBarTitle](https://developers.weixin.qq.com/miniprogram/dev/api/ui/navigation-bar/wx.setNavigationBarTitle.html)
+    - [wx.setNavigationBarColor](https://developers.weixin.qq.com/miniprogram/dev/api/ui/navigation-bar/wx.setNavigationBarColor.html)
+    - [wx.hideNavigationBarLoading](https://developers.weixin.qq.com/miniprogram/dev/api/ui/navigation-bar/wx.hideNavigationBarLoading.html)
+    - [wx.hideHomeButton](https://developers.weixin.qq.com/miniprogram/dev/api/ui/navigation-bar/wx.hideHomeButton.html)
+  - [背景](https://developers.weixin.qq.com/miniprogram/dev/api/ui/background/wx.setBackgroundTextStyle.html)
+    - [wx.setBackgroundTextStyle](https://developers.weixin.qq.com/miniprogram/dev/api/ui/background/wx.setBackgroundTextStyle.html)
+    - [wx.setBackgroundColor](https://developers.weixin.qq.com/miniprogram/dev/api/ui/background/wx.setBackgroundColor.html)
+  - [Tab Bar](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.showTabBarRedDot.html)
+    - [wx.showTabBarRedDot](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.showTabBarRedDot.html)
+    - [wx.showTabBar](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.showTabBar.html)
+    - [wx.setTabBarStyle](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.setTabBarStyle.html)
+    - [wx.setTabBarItem](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.setTabBarItem.html)
+    - [wx.setTabBarBadge](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.setTabBarBadge.html)
+    - [wx.removeTabBarBadge](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.removeTabBarBadge.html)
+    - [wx.hideTabBarRedDot](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.hideTabBarRedDot.html)
+    - [wx.hideTabBar](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.hideTabBar.html)
+  - [字体](https://developers.weixin.qq.com/miniprogram/dev/api/ui/font/wx.loadFontFace.html)
+    - [wx.loadFontFace](https://developers.weixin.qq.com/miniprogram/dev/api/ui/font/wx.loadFontFace.html)
+    - [wx.loadBuiltInFontFace](https://developers.weixin.qq.com/miniprogram/dev/api/ui/font/wx.loadBuiltInFontFace.html)
+  - [下拉刷新](https://developers.weixin.qq.com/miniprogram/dev/api/ui/pull-down-refresh/wx.stopPullDownRefresh.html)
+    - [wx.stopPullDownRefresh](https://developers.weixin.qq.com/miniprogram/dev/api/ui/pull-down-refresh/wx.stopPullDownRefresh.html)
+    - [wx.startPullDownRefresh](https://developers.weixin.qq.com/miniprogram/dev/api/ui/pull-down-refresh/wx.startPullDownRefresh.html)
+  - [滚动](https://developers.weixin.qq.com/miniprogram/dev/api/ui/scroll/wx.pageScrollTo.html)
+    - [wx.pageScrollTo](https://developers.weixin.qq.com/miniprogram/dev/api/ui/scroll/wx.pageScrollTo.html)
+    - [ScrollViewContext](https://developers.weixin.qq.com/miniprogram/dev/api/ui/scroll/ScrollViewContext.html)
+      - [ScrollViewContext.closeRefresh](https://developers.weixin.qq.com/miniprogram/dev/api/ui/scroll/ScrollViewContext.closeRefresh.html)
+      - [ScrollViewContext.closeTwoLevel](https://developers.weixin.qq.com/miniprogram/dev/api/ui/scroll/ScrollViewContext.closeTwoLevel.html)
+      - [ScrollViewContext.scrollIntoView](https://developers.weixin.qq.com/miniprogram/dev/api/ui/scroll/ScrollViewContext.scrollIntoView.html)
+      - [ScrollViewContext.scrollTo](https://developers.weixin.qq.com/miniprogram/dev/api/ui/scroll/ScrollViewContext.scrollTo.html)
+      - [ScrollViewContext.triggerRefresh](https://developers.weixin.qq.com/miniprogram/dev/api/ui/scroll/ScrollViewContext.triggerRefresh.html)
+      - [ScrollViewContext.triggerTwoLevel](https://developers.weixin.qq.com/miniprogram/dev/api/ui/scroll/ScrollViewContext.triggerTwoLevel.html)
+  - [动画](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/wx.createAnimation.html)
+    - [wx.createAnimation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/wx.createAnimation.html)
+    - [Animation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.html)
+      - [Animation.backgroundColor](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.backgroundColor.html)
+      - [Animation.bottom](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.bottom.html)
+      - [Animation.export](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.export.html)
+      - [Animation.height](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.height.html)
+      - [Animation.left](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.left.html)
+      - [Animation.matrix](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.matrix.html)
+      - [Animation.matrix3d](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.matrix3d.html)
+      - [Animation.opacity](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.opacity.html)
+      - [Animation.right](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.right.html)
+      - [Animation.rotate](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.rotate.html)
+      - [Animation.rotate3d](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.rotate3d.html)
+      - [Animation.rotateX](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.rotateX.html)
+      - [Animation.rotateY](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.rotateY.html)
+      - [Animation.rotateZ](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.rotateZ.html)
+      - [Animation.scale](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.scale.html)
+      - [Animation.scale3d](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.scale3d.html)
+      - [Animation.scaleX](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.scaleX.html)
+      - [Animation.scaleY](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.scaleY.html)
+      - [Animation.scaleZ](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.scaleZ.html)
+      - [Animation.skew](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.skew.html)
+      - [Animation.skewX](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.skewX.html)
+      - [Animation.skewY](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.skewY.html)
+      - [Animation.step](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.step.html)
+      - [Animation.top](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.top.html)
+      - [Animation.translate](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.translate.html)
+      - [Animation.translate3d](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.translate3d.html)
+      - [Animation.translateX](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.translateX.html)
+      - [Animation.translateY](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.translateY.html)
+      - [Animation.translateZ](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.translateZ.html)
+      - [Animation.width](https://developers.weixin.qq.com/miniprogram/dev/api/ui/animation/Animation.width.html)
+  - [置顶](https://developers.weixin.qq.com/miniprogram/dev/api/ui/sticky/wx.setTopBarText.html)
+    - [wx.setTopBarText](https://developers.weixin.qq.com/miniprogram/dev/api/ui/sticky/wx.setTopBarText.html)
+  - [自定义组件](https://developers.weixin.qq.com/miniprogram/dev/api/ui/custom-component/wx.nextTick.html)
+    - [wx.nextTick](https://developers.weixin.qq.com/miniprogram/dev/api/ui/custom-component/wx.nextTick.html)
+  - [菜单](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.onUserTriggerTranslation.html)
+    - [wx.onUserTriggerTranslation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.onUserTriggerTranslation.html)
+    - [wx.onUserOffTranslation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.onUserOffTranslation.html)
+    - [wx.onMenuButtonBoundingClientRectWeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.onMenuButtonBoundingClientRectWeightChange.html)
+    - [wx.offUserTriggerTranslation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.offUserTriggerTranslation.html)
+    - [wx.offUserOffTranslation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.offUserOffTranslation.html)
+    - [wx.offMenuButtonBoundingClientRectWeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.offMenuButtonBoundingClientRectWeightChange.html)
+    - [wx.getMenuButtonBoundingClientRect](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.getMenuButtonBoundingClientRect.html)
+  - [窗口](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.setWindowSize.html)
+    - [wx.setWindowSize](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.setWindowSize.html)
+    - [wx.onWindowStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.onWindowStateChange.html)
+    - [wx.onWindowResize](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.onWindowResize.html)
+    - [wx.onParallelStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.onParallelStateChange.html)
+    - [wx.offWindowStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.offWindowStateChange.html)
+    - [wx.offWindowResize](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.offWindowResize.html)
+    - [wx.offParallelStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.offParallelStateChange.html)
+    - [wx.checkIsPictureInPictureActive](https://developers.weixin.qq.com/miniprogram/dev/api/ui/window/wx.checkIsPictureInPictureActive.html)
+  - [worklet 动画](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/wx.worklet.html)
+    - [wx.worklet](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/wx.worklet.html)
+    - [基础](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/base/worklet.cancelAnimation.html)
+      - [worklet.cancelAnimation](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/base/worklet.cancelAnimation.html)
+      - [worklet.derived](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/base/worklet.derived.html)
+      - [worklet.scrollViewContext](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/base/worklet.scrollViewContext.html)
+      - [worklet.scrollViewContext.scrollTo](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/base/worklet.scrollViewContext.scrollTo.html)
+      - [worklet.shared](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/base/worklet.shared.html)
+    - [动画](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/animation/worklet.decay.html)
+      - [worklet.decay](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/animation/worklet.decay.html)
+      - [worklet.Easing](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/animation/worklet.Easing.html)
+      - [worklet.spring](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/animation/worklet.spring.html)
+      - [worklet.timing](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/animation/worklet.timing.html)
+    - [组合动画](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/combine-animation/worklet.delay.html)
+      - [worklet.delay](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/combine-animation/worklet.delay.html)
+      - [worklet.repeat](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/combine-animation/worklet.repeat.html)
+      - [worklet.sequence](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/combine-animation/worklet.sequence.html)
+    - [工具函数](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/tool-function/worklet.runOnJS.html)
+      - [worklet.runOnJS](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/tool-function/worklet.runOnJS.html)
+      - [worklet.runOnUI](https://developers.weixin.qq.com/miniprogram/dev/api/ui/worklet/tool-function/worklet.runOnUI.html)
+- [网络](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/wx.request.html)
+  - [发起请求](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/wx.request.html)
+    - [wx.request](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/wx.request.html)
+    - [RequestTask](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/RequestTask.html)
+      - [RequestTask.abort](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/RequestTask.abort.html)
+      - [RequestTask.offChunkReceived](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/RequestTask.offChunkReceived.html)
+      - [RequestTask.offHeadersReceived](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/RequestTask.offHeadersReceived.html)
+      - [RequestTask.onChunkReceived](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/RequestTask.onChunkReceived.html)
+      - [RequestTask.onHeadersReceived](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/RequestTask.onHeadersReceived.html)
+  - [下载](https://developers.weixin.qq.com/miniprogram/dev/api/network/download/wx.downloadFile.html)
+    - [wx.downloadFile](https://developers.weixin.qq.com/miniprogram/dev/api/network/download/wx.downloadFile.html)
+    - [DownloadTask](https://developers.weixin.qq.com/miniprogram/dev/api/network/download/DownloadTask.html)
+      - [DownloadTask.abort](https://developers.weixin.qq.com/miniprogram/dev/api/network/download/DownloadTask.abort.html)
+      - [DownloadTask.offHeadersReceived](https://developers.weixin.qq.com/miniprogram/dev/api/network/download/DownloadTask.offHeadersReceived.html)
+      - [DownloadTask.offProgressUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/network/download/DownloadTask.offProgressUpdate.html)
+      - [DownloadTask.onHeadersReceived](https://developers.weixin.qq.com/miniprogram/dev/api/network/download/DownloadTask.onHeadersReceived.html)
+      - [DownloadTask.onProgressUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/network/download/DownloadTask.onProgressUpdate.html)
+  - [上传](https://developers.weixin.qq.com/miniprogram/dev/api/network/upload/wx.uploadFile.html)
+    - [wx.uploadFile](https://developers.weixin.qq.com/miniprogram/dev/api/network/upload/wx.uploadFile.html)
+    - [UploadTask](https://developers.weixin.qq.com/miniprogram/dev/api/network/upload/UploadTask.html)
+      - [UploadTask.abort](https://developers.weixin.qq.com/miniprogram/dev/api/network/upload/UploadTask.abort.html)
+      - [UploadTask.offHeadersReceived](https://developers.weixin.qq.com/miniprogram/dev/api/network/upload/UploadTask.offHeadersReceived.html)
+      - [UploadTask.offProgressUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/network/upload/UploadTask.offProgressUpdate.html)
+      - [UploadTask.onHeadersReceived](https://developers.weixin.qq.com/miniprogram/dev/api/network/upload/UploadTask.onHeadersReceived.html)
+      - [UploadTask.onProgressUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/network/upload/UploadTask.onProgressUpdate.html)
+  - [WebSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.sendSocketMessage.html)
+    - [wx.sendSocketMessage](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.sendSocketMessage.html)
+    - [wx.onSocketOpen](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.onSocketOpen.html)
+    - [wx.onSocketMessage](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.onSocketMessage.html)
+    - [wx.onSocketError](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.onSocketError.html)
+    - [wx.onSocketClose](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.onSocketClose.html)
+    - [wx.connectSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.connectSocket.html)
+    - [wx.closeSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.closeSocket.html)
+    - [SocketTask](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/SocketTask.html)
+      - [SocketTask.close](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/SocketTask.close.html)
+      - [SocketTask.onClose](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/SocketTask.onClose.html)
+      - [SocketTask.onError](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/SocketTask.onError.html)
+      - [SocketTask.onMessage](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/SocketTask.onMessage.html)
+      - [SocketTask.onOpen](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/SocketTask.onOpen.html)
+      - [SocketTask.send](https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/SocketTask.send.html)
+  - [mDNS](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.stopLocalServiceDiscovery.html)
+    - [wx.stopLocalServiceDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.stopLocalServiceDiscovery.html)
+    - [wx.startLocalServiceDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.startLocalServiceDiscovery.html)
+    - [wx.onLocalServiceResolveFail](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.onLocalServiceResolveFail.html)
+    - [wx.onLocalServiceLost](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.onLocalServiceLost.html)
+    - [wx.onLocalServiceFound](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.onLocalServiceFound.html)
+    - [wx.onLocalServiceDiscoveryStop](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.onLocalServiceDiscoveryStop.html)
+    - [wx.offLocalServiceResolveFail](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.offLocalServiceResolveFail.html)
+    - [wx.offLocalServiceLost](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.offLocalServiceLost.html)
+    - [wx.offLocalServiceFound](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.offLocalServiceFound.html)
+    - [wx.offLocalServiceDiscoveryStop](https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.offLocalServiceDiscoveryStop.html)
+  - [TCP 通信](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/wx.createTCPSocket.html)
+    - [wx.createTCPSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/wx.createTCPSocket.html)
+    - [TCPSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.html)
+      - [TCPSocket.bindWifi](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.bindWifi.html)
+      - [TCPSocket.close](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.close.html)
+      - [TCPSocket.connect](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.connect.html)
+      - [TCPSocket.offBindWifi](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.offBindWifi.html)
+      - [TCPSocket.offClose](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.offClose.html)
+      - [TCPSocket.offConnect](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.offConnect.html)
+      - [TCPSocket.offError](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.offError.html)
+      - [TCPSocket.offMessage](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.offMessage.html)
+      - [TCPSocket.onBindWifi](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.onBindWifi.html)
+      - [TCPSocket.onClose](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.onClose.html)
+      - [TCPSocket.onConnect](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.onConnect.html)
+      - [TCPSocket.onError](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.onError.html)
+      - [TCPSocket.onMessage](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.onMessage.html)
+      - [TCPSocket.write](https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/TCPSocket.write.html)
+  - [UDP 通信](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/wx.createUDPSocket.html)
+    - [wx.createUDPSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/wx.createUDPSocket.html)
+    - [UDPSocket](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.html)
+      - [UDPSocket.bind](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.bind.html)
+      - [UDPSocket.close](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.close.html)
+      - [UDPSocket.connect](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.connect.html)
+      - [UDPSocket.offClose](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.offClose.html)
+      - [UDPSocket.offError](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.offError.html)
+      - [UDPSocket.offListening](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.offListening.html)
+      - [UDPSocket.offMessage](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.offMessage.html)
+      - [UDPSocket.onClose](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.onClose.html)
+      - [UDPSocket.onError](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.onError.html)
+      - [UDPSocket.onListening](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.onListening.html)
+      - [UDPSocket.onMessage](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.onMessage.html)
+      - [UDPSocket.send](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.send.html)
+      - [UDPSocket.setTTL](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.setTTL.html)
+      - [UDPSocket.write](https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/UDPSocket.write.html)
+- [支付](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestVirtualPayment.html)
+  - [wx.requestVirtualPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestVirtualPayment.html)
+  - [wx.requestPluginPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestPluginPayment.html)
+  - [wx.requestPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestPayment.html)
+  - [wx.requestMerchantTransfer](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestMerchantTransfer.html)
+  - [wx.requestCommonPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestCommonPayment.html)
+  - [wx.requestAppleSubscribeSign](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestAppleSubscribeSign.html)
+  - [wx.openHKOfflinePayView](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.openHKOfflinePayView.html)
+  - [wx.jumpToOfflinePay](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.jumpToOfflinePay.html)
+  - [wx.createGlobalPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.createGlobalPayment.html)
+  - [GlobalPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/GlobalPayment.html)
+    - [GlobalPayment.abort](https://developers.weixin.qq.com/miniprogram/dev/api/payment/GlobalPayment.abort.html)
+    - [GlobalPayment.openMethodPicker](https://developers.weixin.qq.com/miniprogram/dev/api/payment/GlobalPayment.openMethodPicker.html)
+    - [GlobalPayment.requestGlobalPayment](https://developers.weixin.qq.com/miniprogram/dev/api/payment/GlobalPayment.requestGlobalPayment.html)
+- [数据缓存](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.setStorageSync.html)
+  - [wx.setStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.setStorageSync.html)
+  - [wx.setStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.setStorage.html)
+  - [wx.revokeBufferURL](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.revokeBufferURL.html)
+  - [wx.removeStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.removeStorageSync.html)
+  - [wx.removeStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.removeStorage.html)
+  - [wx.getStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.getStorageSync.html)
+  - [wx.getStorageInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.getStorageInfoSync.html)
+  - [wx.getStorageInfo](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.getStorageInfo.html)
+  - [wx.getStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.getStorage.html)
+  - [wx.createBufferURL](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.createBufferURL.html)
+  - [wx.clearStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.clearStorageSync.html)
+  - [wx.clearStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.clearStorage.html)
+  - [wx.batchSetStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.batchSetStorageSync.html)
+  - [wx.batchSetStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.batchSetStorage.html)
+  - [wx.batchGetStorageSync](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.batchGetStorageSync.html)
+  - [wx.batchGetStorage](https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.batchGetStorage.html)
+  - [数据预拉取和周期性更新](https://developers.weixin.qq.com/miniprogram/dev/api/storage/background-fetch/wx.setBackgroundFetchToken.html)
+    - [wx.setBackgroundFetchToken](https://developers.weixin.qq.com/miniprogram/dev/api/storage/background-fetch/wx.setBackgroundFetchToken.html)
+    - [wx.onBackgroundFetchData](https://developers.weixin.qq.com/miniprogram/dev/api/storage/background-fetch/wx.onBackgroundFetchData.html)
+    - [wx.getBackgroundFetchToken](https://developers.weixin.qq.com/miniprogram/dev/api/storage/background-fetch/wx.getBackgroundFetchToken.html)
+    - [wx.getBackgroundFetchData](https://developers.weixin.qq.com/miniprogram/dev/api/storage/background-fetch/wx.getBackgroundFetchData.html)
+  - [缓存管理器](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/wx.createCacheManager.html)
+    - [wx.createCacheManager](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/wx.createCacheManager.html)
+    - [CacheManager](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.html)
+      - [CacheManager.addRule](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.addRule.html)
+      - [CacheManager.addRules](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.addRules.html)
+      - [CacheManager.clearCaches](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.clearCaches.html)
+      - [CacheManager.clearRules](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.clearRules.html)
+      - [CacheManager.deleteCache](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.deleteCache.html)
+      - [CacheManager.deleteCaches](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.deleteCaches.html)
+      - [CacheManager.deleteRule](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.deleteRule.html)
+      - [CacheManager.deleteRules](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.deleteRules.html)
+      - [CacheManager.match](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.match.html)
+      - [CacheManager.off](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.off.html)
+      - [CacheManager.on](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.on.html)
+      - [CacheManager.start](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.start.html)
+      - [CacheManager.stop](https://developers.weixin.qq.com/miniprogram/dev/api/storage/cachemanager/CacheManager.stop.html)
+- [数据分析](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.reportMonitor.html)
+  - [wx.reportMonitor](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.reportMonitor.html)
+  - [wx.reportEvent](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.reportEvent.html)
+  - [wx.reportAnalytics](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.reportAnalytics.html)
+  - [wx.getExptInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.getExptInfoSync.html)
+  - [wx.getCommonConfig](https://developers.weixin.qq.com/miniprogram/dev/api/data-analysis/wx.getCommonConfig.html)
+- [画布](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.createOffscreenCanvas.html)
+  - [wx.createOffscreenCanvas](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.createOffscreenCanvas.html)
+  - [wx.createCanvasContext](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.createCanvasContext.html)
+  - [wx.canvasToTempFilePath](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.canvasToTempFilePath.html)
+  - [wx.canvasPutImageData](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.canvasPutImageData.html)
+  - [wx.canvasGetImageData](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.canvasGetImageData.html)
+  - [Canvas](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Canvas.html)
+    - [Canvas.cancelAnimationFrame](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Canvas.cancelAnimationFrame.html)
+    - [Canvas.createImage](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Canvas.createImage.html)
+    - [Canvas.createImageData](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Canvas.createImageData.html)
+    - [Canvas.createPath2D](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Canvas.createPath2D.html)
+    - [Canvas.getContext](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Canvas.getContext.html)
+    - [Canvas.requestAnimationFrame](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Canvas.requestAnimationFrame.html)
+    - [Canvas.toDataURL](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Canvas.toDataURL.html)
+  - [CanvasContext](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.html)
+    - [CanvasContext.arc](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.arc.html)
+    - [CanvasContext.arcTo](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.arcTo.html)
+    - [CanvasContext.beginPath](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.beginPath.html)
+    - [CanvasContext.bezierCurveTo](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.bezierCurveTo.html)
+    - [CanvasContext.clearRect](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.clearRect.html)
+    - [CanvasContext.clip](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.clip.html)
+    - [CanvasContext.closePath](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.closePath.html)
+    - [CanvasContext.createCircularGradient](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.createCircularGradient.html)
+    - [CanvasContext.createLinearGradient](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.createLinearGradient.html)
+    - [CanvasContext.createPattern](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.createPattern.html)
+    - [CanvasContext.draw](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.draw.html)
+    - [CanvasContext.drawImage](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.drawImage.html)
+    - [CanvasContext.fill](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.fill.html)
+    - [CanvasContext.fillRect](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.fillRect.html)
+    - [CanvasContext.fillText](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.fillText.html)
+    - [CanvasContext.lineTo](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.lineTo.html)
+    - [CanvasContext.measureText](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.measureText.html)
+    - [CanvasContext.moveTo](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.moveTo.html)
+    - [CanvasContext.quadraticCurveTo](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.quadraticCurveTo.html)
+    - [CanvasContext.rect](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.rect.html)
+    - [CanvasContext.restore](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.restore.html)
+    - [CanvasContext.rotate](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.rotate.html)
+    - [CanvasContext.save](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.save.html)
+    - [CanvasContext.scale](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.scale.html)
+    - [CanvasContext.setFillStyle](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setFillStyle.html)
+    - [CanvasContext.setFontSize](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setFontSize.html)
+    - [CanvasContext.setGlobalAlpha](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setGlobalAlpha.html)
+    - [CanvasContext.setLineCap](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setLineCap.html)
+    - [CanvasContext.setLineDash](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setLineDash.html)
+    - [CanvasContext.setLineJoin](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setLineJoin.html)
+    - [CanvasContext.setLineWidth](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setLineWidth.html)
+    - [CanvasContext.setMiterLimit](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setMiterLimit.html)
+    - [CanvasContext.setShadow](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setShadow.html)
+    - [CanvasContext.setStrokeStyle](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setStrokeStyle.html)
+    - [CanvasContext.setTextAlign](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setTextAlign.html)
+    - [CanvasContext.setTextBaseline](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setTextBaseline.html)
+    - [CanvasContext.setTransform](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.setTransform.html)
+    - [CanvasContext.stroke](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.stroke.html)
+    - [CanvasContext.strokeRect](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.strokeRect.html)
+    - [CanvasContext.strokeText](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.strokeText.html)
+    - [CanvasContext.transform](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.transform.html)
+    - [CanvasContext.translate](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.translate.html)
+  - [CanvasGradient](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasGradient.html)
+    - [CanvasGradient.addColorStop](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasGradient.addColorStop.html)
+  - [Color](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Color.html)
+  - [Image](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Image.html)
+  - [ImageData](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/ImageData.html)
+  - [OffscreenCanvas](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/OffscreenCanvas.html)
+    - [OffscreenCanvas.createImage](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/OffscreenCanvas.createImage.html)
+    - [OffscreenCanvas.getContext](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/OffscreenCanvas.getContext.html)
+  - [Path2D](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.html)
+    - [Path2D.addPath](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.addPath.html)
+    - [Path2D.arc](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.arc.html)
+    - [Path2D.arcTo](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.arcTo.html)
+    - [Path2D.bezierCurveTo](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.bezierCurveTo.html)
+    - [Path2D.closePath](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.closePath.html)
+    - [Path2D.ellipse](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.ellipse.html)
+    - [Path2D.lineTo](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.lineTo.html)
+    - [Path2D.moveTo](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.moveTo.html)
+    - [Path2D.quadraticCurveTo](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.quadraticCurveTo.html)
+    - [Path2D.rect](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/Path2D.rect.html)
+  - [RenderingContext](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/RenderingContext.html)
+- [媒体](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/wx.createMapContext.html)
+  - [地图](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/wx.createMapContext.html)
+    - [wx.createMapContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/wx.createMapContext.html)
+    - [MapContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.html)
+      - [MapContext.addArc](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.addArc.html)
+      - [MapContext.addCustomLayer](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.addCustomLayer.html)
+      - [MapContext.addGroundOverlay](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.addGroundOverlay.html)
+      - [MapContext.addMarkers](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.addMarkers.html)
+      - [MapContext.addVisualLayer](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.addVisualLayer.html)
+      - [MapContext.eraseLines](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.eraseLines.html)
+      - [MapContext.executeVisualLayerCommand](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.executeVisualLayerCommand.html)
+      - [MapContext.fromScreenLocation](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.fromScreenLocation.html)
+      - [MapContext.getCenterLocation](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.getCenterLocation.html)
+      - [MapContext.getRegion](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.getRegion.html)
+      - [MapContext.getRotate](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.getRotate.html)
+      - [MapContext.getScale](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.getScale.html)
+      - [MapContext.getSkew](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.getSkew.html)
+      - [MapContext.includePoints](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.includePoints.html)
+      - [MapContext.initMarkerCluster](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.initMarkerCluster.html)
+      - [MapContext.moveAlong](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.moveAlong.html)
+      - [MapContext.moveToLocation](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.moveToLocation.html)
+      - [MapContext.on](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.on.html)
+      - [MapContext.openMapApp](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.openMapApp.html)
+      - [MapContext.removeArc](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.removeArc.html)
+      - [MapContext.removeCustomLayer](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.removeCustomLayer.html)
+      - [MapContext.removeGroundOverlay](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.removeGroundOverlay.html)
+      - [MapContext.removeMarkers](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.removeMarkers.html)
+      - [MapContext.removeVisualLayer](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.removeVisualLayer.html)
+      - [MapContext.setBoundary](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.setBoundary.html)
+      - [MapContext.setCenterOffset](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.setCenterOffset.html)
+      - [MapContext.setLocMarkerIcon](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.setLocMarkerIcon.html)
+      - [MapContext.toScreenLocation](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.toScreenLocation.html)
+      - [MapContext.translateMarker](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.translateMarker.html)
+      - [MapContext.updateGroundOverlay](https://developers.weixin.qq.com/miniprogram/dev/api/media/map/MapContext.updateGroundOverlay.html)
+  - [图片](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.saveImageToPhotosAlbum.html)
+    - [wx.saveImageToPhotosAlbum](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.saveImageToPhotosAlbum.html)
+    - [wx.previewMedia](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.previewMedia.html)
+    - [wx.previewImage](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.previewImage.html)
+    - [wx.getImageInfo](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.getImageInfo.html)
+    - [wx.editImage](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.editImage.html)
+    - [wx.cropImage](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.cropImage.html)
+    - [wx.compressImage](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.compressImage.html)
+    - [wx.chooseMessageFile](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.chooseMessageFile.html)
+    - [wx.chooseImage](https://developers.weixin.qq.com/miniprogram/dev/api/media/image/wx.chooseImage.html)
+  - [视频](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.saveVideoToPhotosAlbum.html)
+    - [wx.saveVideoToPhotosAlbum](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.saveVideoToPhotosAlbum.html)
+    - [wx.openVideoEditor](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.openVideoEditor.html)
+    - [wx.getVideoInfo](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.getVideoInfo.html)
+    - [wx.createVideoContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.createVideoContext.html)
+    - [wx.compressVideo](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.compressVideo.html)
+    - [wx.chooseVideo](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.chooseVideo.html)
+    - [wx.chooseMedia](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.chooseMedia.html)
+    - [wx.checkDeviceSupportHevc](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.checkDeviceSupportHevc.html)
+    - [VideoContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.html)
+      - [VideoContext.exitBackgroundPlayback](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.exitBackgroundPlayback.html)
+      - [VideoContext.exitCasting](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.exitCasting.html)
+      - [VideoContext.exitFullScreen](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.exitFullScreen.html)
+      - [VideoContext.exitPictureInPicture](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.exitPictureInPicture.html)
+      - [VideoContext.hideStatusBar](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.hideStatusBar.html)
+      - [VideoContext.pause](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.pause.html)
+      - [VideoContext.play](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.play.html)
+      - [VideoContext.playbackRate](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.playbackRate.html)
+      - [VideoContext.reconnectCasting](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.reconnectCasting.html)
+      - [VideoContext.requestBackgroundPlayback](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.requestBackgroundPlayback.html)
+      - [VideoContext.requestFullScreen](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.requestFullScreen.html)
+      - [VideoContext.seek](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.seek.html)
+      - [VideoContext.sendDanmu](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.sendDanmu.html)
+      - [VideoContext.showStatusBar](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.showStatusBar.html)
+      - [VideoContext.startCasting](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.startCasting.html)
+      - [VideoContext.stop](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.stop.html)
+      - [VideoContext.switchCasting](https://developers.weixin.qq.com/miniprogram/dev/api/media/video/VideoContext.switchCasting.html)
+  - [音频](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.stopVoice.html)
+    - [wx.stopVoice](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.stopVoice.html)
+    - [wx.setInnerAudioOption](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.setInnerAudioOption.html)
+    - [wx.playVoice](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.playVoice.html)
+    - [wx.pauseVoice](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.pauseVoice.html)
+    - [wx.getAvailableAudioSources](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.getAvailableAudioSources.html)
+    - [wx.createWebAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createWebAudioContext.html)
+    - [wx.createMediaAudioPlayer](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createMediaAudioPlayer.html)
+    - [wx.createInnerAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createInnerAudioContext.html)
+    - [wx.createAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/wx.createAudioContext.html)
+    - [AudioBuffer](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioBuffer.html)
+      - [AudioBuffer.copyFromChannel](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioBuffer.copyFromChannel.html)
+      - [AudioBuffer.copyToChannel](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioBuffer.copyToChannel.html)
+      - [AudioBuffer.getChannelData](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioBuffer.getChannelData.html)
+    - [AudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioContext.html)
+      - [AudioContext.pause](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioContext.pause.html)
+      - [AudioContext.play](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioContext.play.html)
+      - [AudioContext.seek](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioContext.seek.html)
+      - [AudioContext.setSrc](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioContext.setSrc.html)
+    - [AudioListener](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioListener.html)
+    - [AudioParam](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/AudioParam.html)
+    - [BufferSourceNode](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/BufferSourceNode.html)
+      - [BufferSourceNode.connect](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/BufferSourceNode.connect.html)
+      - [BufferSourceNode.disconnect](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/BufferSourceNode.disconnect.html)
+      - [BufferSourceNode.start](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/BufferSourceNode.start.html)
+      - [BufferSourceNode.stop](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/BufferSourceNode.stop.html)
+    - [InnerAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.html)
+      - [InnerAudioContext.destroy](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.destroy.html)
+      - [InnerAudioContext.offCanplay](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.offCanplay.html)
+      - [InnerAudioContext.offEnded](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.offEnded.html)
+      - [InnerAudioContext.offError](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.offError.html)
+      - [InnerAudioContext.offPause](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.offPause.html)
+      - [InnerAudioContext.offPlay](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.offPlay.html)
+      - [InnerAudioContext.offSeeked](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.offSeeked.html)
+      - [InnerAudioContext.offSeeking](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.offSeeking.html)
+      - [InnerAudioContext.offStop](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.offStop.html)
+      - [InnerAudioContext.offTimeUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.offTimeUpdate.html)
+      - [InnerAudioContext.offWaiting](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.offWaiting.html)
+      - [InnerAudioContext.onCanplay](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.onCanplay.html)
+      - [InnerAudioContext.onEnded](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.onEnded.html)
+      - [InnerAudioContext.onError](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.onError.html)
+      - [InnerAudioContext.onPause](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.onPause.html)
+      - [InnerAudioContext.onPlay](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.onPlay.html)
+      - [InnerAudioContext.onSeeked](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.onSeeked.html)
+      - [InnerAudioContext.onSeeking](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.onSeeking.html)
+      - [InnerAudioContext.onStop](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.onStop.html)
+      - [InnerAudioContext.onTimeUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.onTimeUpdate.html)
+      - [InnerAudioContext.onWaiting](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.onWaiting.html)
+      - [InnerAudioContext.pause](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.pause.html)
+      - [InnerAudioContext.play](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.play.html)
+      - [InnerAudioContext.seek](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.seek.html)
+      - [InnerAudioContext.stop](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/InnerAudioContext.stop.html)
+    - [MediaAudioPlayer](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/MediaAudioPlayer.html)
+      - [MediaAudioPlayer.addAudioSource](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/MediaAudioPlayer.addAudioSource.html)
+      - [MediaAudioPlayer.destroy](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/MediaAudioPlayer.destroy.html)
+      - [MediaAudioPlayer.removeAudioSource](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/MediaAudioPlayer.removeAudioSource.html)
+      - [MediaAudioPlayer.start](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/MediaAudioPlayer.start.html)
+      - [MediaAudioPlayer.stop](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/MediaAudioPlayer.stop.html)
+    - [WebAudioContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.html)
+      - [WebAudioContext.close](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.close.html)
+      - [WebAudioContext.createAnalyser](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createAnalyser.html)
+      - [WebAudioContext.createBiquadFilter](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createBiquadFilter.html)
+      - [WebAudioContext.createBuffer](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createBuffer.html)
+      - [WebAudioContext.createBufferSource](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createBufferSource.html)
+      - [WebAudioContext.createChannelMerger](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createChannelMerger.html)
+      - [WebAudioContext.createChannelSplitter](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createChannelSplitter.html)
+      - [WebAudioContext.createConstantSource](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createConstantSource.html)
+      - [WebAudioContext.createDelay](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createDelay.html)
+      - [WebAudioContext.createDynamicsCompressor](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createDynamicsCompressor.html)
+      - [WebAudioContext.createGain](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createGain.html)
+      - [WebAudioContext.createIIRFilter](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createIIRFilter.html)
+      - [WebAudioContext.createOscillator](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createOscillator.html)
+      - [WebAudioContext.createPanner](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createPanner.html)
+      - [WebAudioContext.createPeriodicWave](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createPeriodicWave.html)
+      - [WebAudioContext.createScriptProcessor](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createScriptProcessor.html)
+      - [WebAudioContext.createWaveShaper](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.createWaveShaper.html)
+      - [WebAudioContext.decodeAudioData](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.decodeAudioData.html)
+      - [WebAudioContext.resume](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.resume.html)
+      - [WebAudioContext.suspend](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContext.suspend.html)
+    - [WebAudioContextNode](https://developers.weixin.qq.com/miniprogram/dev/api/media/audio/WebAudioContextNode.html)
+  - [背景音频](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.stopBackgroundAudio.html)
+    - [wx.stopBackgroundAudio](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.stopBackgroundAudio.html)
+    - [wx.seekBackgroundAudio](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.seekBackgroundAudio.html)
+    - [wx.playBackgroundAudio](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.playBackgroundAudio.html)
+    - [wx.pauseBackgroundAudio](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.pauseBackgroundAudio.html)
+    - [wx.onBackgroundAudioStop](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.onBackgroundAudioStop.html)
+    - [wx.onBackgroundAudioPlay](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.onBackgroundAudioPlay.html)
+    - [wx.onBackgroundAudioPause](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.onBackgroundAudioPause.html)
+    - [wx.getBackgroundAudioPlayerState](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.getBackgroundAudioPlayerState.html)
+    - [wx.getBackgroundAudioManager](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/wx.getBackgroundAudioManager.html)
+    - [BackgroundAudioManager](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.html)
+      - [BackgroundAudioManager.onCanplay](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onCanplay.html)
+      - [BackgroundAudioManager.onEnded](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onEnded.html)
+      - [BackgroundAudioManager.onError](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onError.html)
+      - [BackgroundAudioManager.onNext](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onNext.html)
+      - [BackgroundAudioManager.onPause](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onPause.html)
+      - [BackgroundAudioManager.onPlay](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onPlay.html)
+      - [BackgroundAudioManager.onPrev](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onPrev.html)
+      - [BackgroundAudioManager.onSeeked](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onSeeked.html)
+      - [BackgroundAudioManager.onSeeking](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onSeeking.html)
+      - [BackgroundAudioManager.onStop](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onStop.html)
+      - [BackgroundAudioManager.onTimeUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onTimeUpdate.html)
+      - [BackgroundAudioManager.onWaiting](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.onWaiting.html)
+      - [BackgroundAudioManager.pause](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.pause.html)
+      - [BackgroundAudioManager.play](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.play.html)
+      - [BackgroundAudioManager.seek](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.seek.html)
+      - [BackgroundAudioManager.stop](https://developers.weixin.qq.com/miniprogram/dev/api/media/background-audio/BackgroundAudioManager.stop.html)
+  - [实时音视频](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/wx.createLivePusherContext.html)
+    - [wx.createLivePusherContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/wx.createLivePusherContext.html)
+    - [wx.createLivePlayerContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/wx.createLivePlayerContext.html)
+    - [LivePlayerContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.html)
+      - [LivePlayerContext.exitBackgroundPlayback](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.exitBackgroundPlayback.html)
+      - [LivePlayerContext.exitCasting](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.exitCasting.html)
+      - [LivePlayerContext.exitFullScreen](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.exitFullScreen.html)
+      - [LivePlayerContext.exitPictureInPicture](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.exitPictureInPicture.html)
+      - [LivePlayerContext.mute](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.mute.html)
+      - [LivePlayerContext.pause](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.pause.html)
+      - [LivePlayerContext.play](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.play.html)
+      - [LivePlayerContext.reconnectCasting](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.reconnectCasting.html)
+      - [LivePlayerContext.requestBackgroundPlayback](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.requestBackgroundPlayback.html)
+      - [LivePlayerContext.requestFullScreen](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.requestFullScreen.html)
+      - [LivePlayerContext.resume](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.resume.html)
+      - [LivePlayerContext.snapshot](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.snapshot.html)
+      - [LivePlayerContext.startCasting](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.startCasting.html)
+      - [LivePlayerContext.stop](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.stop.html)
+      - [LivePlayerContext.switchCasting](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePlayerContext.switchCasting.html)
+    - [LivePusherContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.html)
+      - [LivePusherContext.applyBlusherStickMakeup](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.applyBlusherStickMakeup.html)
+      - [LivePusherContext.applyEyeBrowMakeup](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.applyEyeBrowMakeup.html)
+      - [LivePusherContext.applyEyeShadowMakeup](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.applyEyeShadowMakeup.html)
+      - [LivePusherContext.applyFaceContourMakeup](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.applyFaceContourMakeup.html)
+      - [LivePusherContext.applyFilter](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.applyFilter.html)
+      - [LivePusherContext.applyLipStickMakeup](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.applyLipStickMakeup.html)
+      - [LivePusherContext.applySticker](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.applySticker.html)
+      - [LivePusherContext.clearFilters](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.clearFilters.html)
+      - [LivePusherContext.clearMakeups](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.clearMakeups.html)
+      - [LivePusherContext.clearStickers](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.clearStickers.html)
+      - [LivePusherContext.createOffscreenCanvas](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.createOffscreenCanvas.html)
+      - [LivePusherContext.exitPictureInPicture](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.exitPictureInPicture.html)
+      - [LivePusherContext.getMaxZoom](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.getMaxZoom.html)
+      - [LivePusherContext.onCustomRendererEvent](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.onCustomRendererEvent.html)
+      - [LivePusherContext.pause](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.pause.html)
+      - [LivePusherContext.pauseBGM](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.pauseBGM.html)
+      - [LivePusherContext.playBGM](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.playBGM.html)
+      - [LivePusherContext.resume](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.resume.html)
+      - [LivePusherContext.resumeBGM](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.resumeBGM.html)
+      - [LivePusherContext.sendMessage](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.sendMessage.html)
+      - [LivePusherContext.setBGMVolume](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.setBGMVolume.html)
+      - [LivePusherContext.setMICVolume](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.setMICVolume.html)
+      - [LivePusherContext.setZoom](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.setZoom.html)
+      - [LivePusherContext.snapshot](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.snapshot.html)
+      - [LivePusherContext.start](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.start.html)
+      - [LivePusherContext.startPreview](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.startPreview.html)
+      - [LivePusherContext.stop](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.stop.html)
+      - [LivePusherContext.stopBGM](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.stopBGM.html)
+      - [LivePusherContext.stopPreview](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.stopPreview.html)
+      - [LivePusherContext.switchCamera](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.switchCamera.html)
+      - [LivePusherContext.toggleTorch](https://developers.weixin.qq.com/miniprogram/dev/api/media/live/LivePusherContext.toggleTorch.html)
+  - [录音](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/wx.stopRecord.html)
+    - [wx.stopRecord](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/wx.stopRecord.html)
+    - [wx.startRecord](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/wx.startRecord.html)
+    - [wx.getRecorderManager](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/wx.getRecorderManager.html)
+    - [RecorderManager](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.html)
+      - [RecorderManager.onError](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.onError.html)
+      - [RecorderManager.onFrameRecorded](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.onFrameRecorded.html)
+      - [RecorderManager.onInterruptionBegin](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.onInterruptionBegin.html)
+      - [RecorderManager.onInterruptionEnd](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.onInterruptionEnd.html)
+      - [RecorderManager.onPause](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.onPause.html)
+      - [RecorderManager.onResume](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.onResume.html)
+      - [RecorderManager.onStart](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.onStart.html)
+      - [RecorderManager.onStop](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.onStop.html)
+      - [RecorderManager.pause](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.pause.html)
+      - [RecorderManager.resume](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.resume.html)
+      - [RecorderManager.start](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.start.html)
+      - [RecorderManager.stop](https://developers.weixin.qq.com/miniprogram/dev/api/media/recorder/RecorderManager.stop.html)
+  - [相机](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/wx.createCameraContext.html)
+    - [wx.createCameraContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/wx.createCameraContext.html)
+    - [CameraContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraContext.html)
+      - [CameraContext.onCameraFrame](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraContext.onCameraFrame.html)
+      - [CameraContext.setZoom](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraContext.setZoom.html)
+      - [CameraContext.startRecord](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraContext.startRecord.html)
+      - [CameraContext.stopRecord](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraContext.stopRecord.html)
+      - [CameraContext.takePhoto](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraContext.takePhoto.html)
+    - [CameraFrameListener](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraFrameListener.html)
+      - [CameraFrameListener.start](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraFrameListener.start.html)
+      - [CameraFrameListener.stop](https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/CameraFrameListener.stop.html)
+  - [富文本](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.blur.html)
+    - [EditorContext](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.html)
+      - [EditorContext.blur](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.blur.html)
+      - [EditorContext.clear](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.clear.html)
+      - [EditorContext.deleteText](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.deleteText.html)
+      - [EditorContext.format](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.format.html)
+      - [EditorContext.getBounds](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.getBounds.html)
+      - [EditorContext.getContents](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.getContents.html)
+      - [EditorContext.getHistoryState](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.getHistoryState.html)
+      - [EditorContext.getSelection](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.getSelection.html)
+      - [EditorContext.getSelectionText](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.getSelectionText.html)
+      - [EditorContext.insertCustomBlock](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.insertCustomBlock.html)
+      - [EditorContext.insertDivider](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.insertDivider.html)
+      - [EditorContext.insertImage](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.insertImage.html)
+      - [EditorContext.insertText](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.insertText.html)
+      - [EditorContext.redo](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.redo.html)
+      - [EditorContext.removeFormat](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.removeFormat.html)
+      - [EditorContext.scrollIntoView](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.scrollIntoView.html)
+      - [EditorContext.setContents](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.setContents.html)
+      - [EditorContext.setSelection](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.setSelection.html)
+      - [EditorContext.undo](https://developers.weixin.qq.com/miniprogram/dev/api/media/editor/EditorContext.undo.html)
+  - [音视频合成](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/wx.createMediaContainer.html)
+    - [wx.createMediaContainer](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/wx.createMediaContainer.html)
+    - [MediaContainer](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/MediaContainer.html)
+      - [MediaContainer.addTrack](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/MediaContainer.addTrack.html)
+      - [MediaContainer.destroy](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/MediaContainer.destroy.html)
+      - [MediaContainer.export](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/MediaContainer.export.html)
+      - [MediaContainer.extractDataSource](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/MediaContainer.extractDataSource.html)
+      - [MediaContainer.removeTrack](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/MediaContainer.removeTrack.html)
+    - [MediaTrack](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-processing/MediaTrack.html)
+  - [实时语音](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.updateVoIPChatMuteConfig.html)
+    - [wx.updateVoIPChatMuteConfig](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.updateVoIPChatMuteConfig.html)
+    - [wx.subscribeVoIPVideoMembers](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.subscribeVoIPVideoMembers.html)
+    - [wx.setEnable1v1Chat](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.setEnable1v1Chat.html)
+    - [wx.onVoIPVideoMembersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.onVoIPVideoMembersChanged.html)
+    - [wx.onVoIPChatStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.onVoIPChatStateChanged.html)
+    - [wx.onVoIPChatSpeakersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.onVoIPChatSpeakersChanged.html)
+    - [wx.onVoIPChatMembersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.onVoIPChatMembersChanged.html)
+    - [wx.onVoIPChatInterrupted](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.onVoIPChatInterrupted.html)
+    - [wx.offVoIPVideoMembersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.offVoIPVideoMembersChanged.html)
+    - [wx.offVoIPChatStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.offVoIPChatStateChanged.html)
+    - [wx.offVoIPChatSpeakersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.offVoIPChatSpeakersChanged.html)
+    - [wx.offVoIPChatMembersChanged](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.offVoIPChatMembersChanged.html)
+    - [wx.offVoIPChatInterrupted](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.offVoIPChatInterrupted.html)
+    - [wx.joinVoIPChat](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.joinVoIPChat.html)
+    - [wx.join1v1Chat](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.join1v1Chat.html)
+    - [wx.exitVoIPChat](https://developers.weixin.qq.com/miniprogram/dev/api/media/voip/wx.exitVoIPChat.html)
+  - [画面录制器](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/wx.createMediaRecorder.html)
+    - [wx.createMediaRecorder](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/wx.createMediaRecorder.html)
+    - [MediaRecorder](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/MediaRecorder.html)
+      - [MediaRecorder.destroy](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/MediaRecorder.destroy.html)
+      - [MediaRecorder.off](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/MediaRecorder.off.html)
+      - [MediaRecorder.on](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/MediaRecorder.on.html)
+      - [MediaRecorder.pause](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/MediaRecorder.pause.html)
+      - [MediaRecorder.requestFrame](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/MediaRecorder.requestFrame.html)
+      - [MediaRecorder.resume](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/MediaRecorder.resume.html)
+      - [MediaRecorder.start](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/MediaRecorder.start.html)
+      - [MediaRecorder.stop](https://developers.weixin.qq.com/miniprogram/dev/api/media/media-recorder/MediaRecorder.stop.html)
+  - [视频解码器](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/wx.createVideoDecoder.html)
+    - [wx.createVideoDecoder](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/wx.createVideoDecoder.html)
+    - [VideoDecoder](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/VideoDecoder.html)
+      - [VideoDecoder.getFrameData](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/VideoDecoder.getFrameData.html)
+      - [VideoDecoder.off](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/VideoDecoder.off.html)
+      - [VideoDecoder.on](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/VideoDecoder.on.html)
+      - [VideoDecoder.remove](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/VideoDecoder.remove.html)
+      - [VideoDecoder.seek](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/VideoDecoder.seek.html)
+      - [VideoDecoder.start](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/VideoDecoder.start.html)
+      - [VideoDecoder.stop](https://developers.weixin.qq.com/miniprogram/dev/api/media/video-decoder/VideoDecoder.stop.html)
+- [位置](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.stopLocationUpdate.html)
+  - [wx.stopLocationUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.stopLocationUpdate.html)
+  - [wx.startLocationUpdateBackground](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.startLocationUpdateBackground.html)
+  - [wx.startLocationUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.startLocationUpdate.html)
+  - [wx.openLocation](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.openLocation.html)
+  - [wx.onLocationChangeError](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.onLocationChangeError.html)
+  - [wx.onLocationChange](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.onLocationChange.html)
+  - [wx.offLocationChangeError](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.offLocationChangeError.html)
+  - [wx.offLocationChange](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.offLocationChange.html)
+  - [wx.getLocation](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.getLocation.html)
+  - [wx.getFuzzyLocation](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.getFuzzyLocation.html)
+  - [wx.choosePoi](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.choosePoi.html)
+  - [wx.chooseLocation](https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.chooseLocation.html)
+- [文件](https://developers.weixin.qq.com/miniprogram/dev/api/file/wx.saveFileToDisk.html)
+  - [wx.saveFileToDisk](https://developers.weixin.qq.com/miniprogram/dev/api/file/wx.saveFileToDisk.html)
+  - [wx.openDocument](https://developers.weixin.qq.com/miniprogram/dev/api/file/wx.openDocument.html)
+  - [wx.getFileSystemManager](https://developers.weixin.qq.com/miniprogram/dev/api/file/wx.getFileSystemManager.html)
+  - [FileStats](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileStats.html)
+  - [FileSystemManager](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.html)
+    - [FileSystemManager.access](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.access.html)
+    - [FileSystemManager.accessSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.accessSync.html)
+    - [FileSystemManager.appendFile](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.appendFile.html)
+    - [FileSystemManager.appendFileSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.appendFileSync.html)
+    - [FileSystemManager.close](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.close.html)
+    - [FileSystemManager.closeSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.closeSync.html)
+    - [FileSystemManager.copyFile](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.copyFile.html)
+    - [FileSystemManager.copyFileSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.copyFileSync.html)
+    - [FileSystemManager.fstat](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.fstat.html)
+    - [FileSystemManager.fstatSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.fstatSync.html)
+    - [FileSystemManager.ftruncate](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.ftruncate.html)
+    - [FileSystemManager.ftruncateSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.ftruncateSync.html)
+    - [FileSystemManager.getFileInfo](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.getFileInfo.html)
+    - [FileSystemManager.getSavedFileList](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.getSavedFileList.html)
+    - [FileSystemManager.mkdir](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.mkdir.html)
+    - [FileSystemManager.mkdirSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.mkdirSync.html)
+    - [FileSystemManager.open](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.open.html)
+    - [FileSystemManager.openSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.openSync.html)
+    - [FileSystemManager.read](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.read.html)
+    - [FileSystemManager.readCompressedFile](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.readCompressedFile.html)
+    - [FileSystemManager.readCompressedFileSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.readCompressedFileSync.html)
+    - [FileSystemManager.readdir](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.readdir.html)
+    - [FileSystemManager.readdirSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.readdirSync.html)
+    - [FileSystemManager.readFile](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.readFile.html)
+    - [FileSystemManager.readFileSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.readFileSync.html)
+    - [FileSystemManager.readSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.readSync.html)
+    - [FileSystemManager.readZipEntry](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.readZipEntry.html)
+    - [FileSystemManager.removeSavedFile](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.removeSavedFile.html)
+    - [FileSystemManager.rename](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.rename.html)
+    - [FileSystemManager.renameSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.renameSync.html)
+    - [FileSystemManager.rmdir](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.rmdir.html)
+    - [FileSystemManager.rmdirSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.rmdirSync.html)
+    - [FileSystemManager.saveFile](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.saveFile.html)
+    - [FileSystemManager.saveFileSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.saveFileSync.html)
+    - [FileSystemManager.stat](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.stat.html)
+    - [FileSystemManager.statSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.statSync.html)
+    - [FileSystemManager.truncate](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.truncate.html)
+    - [FileSystemManager.truncateSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.truncateSync.html)
+    - [FileSystemManager.unlink](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.unlink.html)
+    - [FileSystemManager.unlinkSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.unlinkSync.html)
+    - [FileSystemManager.unzip](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.unzip.html)
+    - [FileSystemManager.write](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.write.html)
+    - [FileSystemManager.writeFile](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.writeFile.html)
+    - [FileSystemManager.writeFileSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.writeFileSync.html)
+    - [FileSystemManager.writeSync](https://developers.weixin.qq.com/miniprogram/dev/api/file/FileSystemManager.writeSync.html)
+  - [ReadResult](https://developers.weixin.qq.com/miniprogram/dev/api/file/ReadResult.html)
+  - [Stats](https://developers.weixin.qq.com/miniprogram/dev/api/file/Stats.html)
+    - [Stats.isDirectory](https://developers.weixin.qq.com/miniprogram/dev/api/file/Stats.isDirectory.html)
+    - [Stats.isFile](https://developers.weixin.qq.com/miniprogram/dev/api/file/Stats.isFile.html)
+  - [WriteResult](https://developers.weixin.qq.com/miniprogram/dev/api/file/WriteResult.html)
+- [开放接口](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.pluginLogin.html)
+  - [登录](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.pluginLogin.html)
+    - [wx.pluginLogin](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.pluginLogin.html)
+    - [wx.login](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.login.html)
+    - [wx.checkSession](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.checkSession.html)
+  - [账号信息](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/account-info/wx.getAccountInfoSync.html)
+    - [wx.getAccountInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/account-info/wx.getAccountInfoSync.html)
+  - [用户信息](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/wx.getUserProfile.html)
+    - [wx.getUserProfile](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/wx.getUserProfile.html)
+    - [wx.getUserInfo](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/wx.getUserInfo.html)
+    - [UserInfo](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/UserInfo.html)
+  - [授权](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/authorize/wx.authorizeForMiniProgram.html)
+    - [wx.authorizeForMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/authorize/wx.authorizeForMiniProgram.html)
+    - [wx.authorize](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/authorize/wx.authorize.html)
+  - [设置](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/setting/wx.openSetting.html)
+    - [wx.openSetting](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/setting/wx.openSetting.html)
+    - [wx.getSetting](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/setting/wx.getSetting.html)
+    - [AuthSetting](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/setting/AuthSetting.html)
+    - [SubscriptionsSetting](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/setting/SubscriptionsSetting.html)
+  - [收货地址](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/address/wx.chooseAddress.html)
+    - [wx.chooseAddress](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/address/wx.chooseAddress.html)
+  - [卡券](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/card/wx.openCard.html)
+    - [wx.openCard](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/card/wx.openCard.html)
+    - [wx.addCard](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/card/wx.addCard.html)
+  - [发票](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/invoice/wx.chooseInvoiceTitle.html)
+    - [wx.chooseInvoiceTitle](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/invoice/wx.chooseInvoiceTitle.html)
+    - [wx.chooseInvoice](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/invoice/wx.chooseInvoice.html)
+  - [生物认证](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/soter/wx.startSoterAuthentication.html)
+    - [wx.startSoterAuthentication](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/soter/wx.startSoterAuthentication.html)
+    - [wx.checkIsSupportSoterAuthentication](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/soter/wx.checkIsSupportSoterAuthentication.html)
+    - [wx.checkIsSoterEnrolledInDevice](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/soter/wx.checkIsSoterEnrolledInDevice.html)
+  - [微信运动](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/werun/wx.shareToWeRun.html)
+    - [wx.shareToWeRun](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/werun/wx.shareToWeRun.html)
+    - [wx.getWeRunData](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/werun/wx.getWeRunData.html)
+  - [订阅消息](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/subscribe-message/wx.requestSubscribeMessage.html)
+    - [wx.requestSubscribeMessage](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/subscribe-message/wx.requestSubscribeMessage.html)
+    - [wx.requestSubscribeDeviceMessage](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/subscribe-message/wx.requestSubscribeDeviceMessage.html)
+  - [微信红包](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/redpackage/wx.showRedPackage.html)
+    - [wx.showRedPackage](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/redpackage/wx.showRedPackage.html)
+  - [微信小店](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/store/wx.openStoreOrderDetail.html)
+    - [wx.openStoreOrderDetail](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/store/wx.openStoreOrderDetail.html)
+    - [wx.openStoreCouponDetail](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/store/wx.openStoreCouponDetail.html)
+  - [收藏](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/favorites/wx.addVideoToFavorites.html)
+    - [wx.addVideoToFavorites](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/favorites/wx.addVideoToFavorites.html)
+    - [wx.addFileToFavorites](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/favorites/wx.addFileToFavorites.html)
+  - [用工关系](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/employee-relation/wx.requestSubscribeEmployeeMessage.html)
+    - [wx.requestSubscribeEmployeeMessage](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/employee-relation/wx.requestSubscribeEmployeeMessage.html)
+    - [wx.checkEmployeeRelation](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/employee-relation/wx.checkEmployeeRelation.html)
+    - [wx.bindEmployeeRelation](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/employee-relation/wx.bindEmployeeRelation.html)
+  - [我的小程序](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/my-miniprogram/wx.checkIsAddedToMyMiniProgram.html)
+    - [wx.checkIsAddedToMyMiniProgram](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/my-miniprogram/wx.checkIsAddedToMyMiniProgram.html)
+  - [人脸检测](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/face/wx.requestFacialVerify.html)
+    - [wx.requestFacialVerify](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/face/wx.requestFacialVerify.html)
+    - [wx.checkIsSupportFacialRecognition](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/face/wx.checkIsSupportFacialRecognition.html)
+  - [车牌](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/license-plate/wx.chooseLicensePlate.html)
+    - [wx.chooseLicensePlate](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/license-plate/wx.chooseLicensePlate.html)
+  - [视频号](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.reserveChannelsLive.html)
+    - [wx.reserveChannelsLive](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.reserveChannelsLive.html)
+    - [wx.openChannelsUserProfile](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.openChannelsUserProfile.html)
+    - [wx.openChannelsLiveNoticeInfo](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.openChannelsLiveNoticeInfo.html)
+    - [wx.openChannelsLive](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.openChannelsLive.html)
+    - [wx.openChannelsEvent](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.openChannelsEvent.html)
+    - [wx.openChannelsActivity](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.openChannelsActivity.html)
+    - [wx.getChannelsShareKey](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.getChannelsShareKey.html)
+    - [wx.getChannelsLiveNoticeInfo](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.getChannelsLiveNoticeInfo.html)
+    - [wx.getChannelsLiveInfo](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/channels/wx.getChannelsLiveInfo.html)
+  - [音视频通话](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/device-voip/wx.requestDeviceVoIP.html)
+    - [wx.requestDeviceVoIP](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/device-voip/wx.requestDeviceVoIP.html)
+    - [wx.getDeviceVoIPList](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/device-voip/wx.getDeviceVoIPList.html)
+  - [微信群](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/group/wx.getGroupEnterInfo.html)
+    - [wx.getGroupEnterInfo](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/group/wx.getGroupEnterInfo.html)
+  - [隐私信息授权](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/privacy/wx.requirePrivacyAuthorize.html)
+    - [wx.requirePrivacyAuthorize](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/privacy/wx.requirePrivacyAuthorize.html)
+    - [wx.openPrivacyContract](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/privacy/wx.openPrivacyContract.html)
+    - [wx.onNeedPrivacyAuthorization](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/privacy/wx.onNeedPrivacyAuthorization.html)
+    - [wx.getPrivacySetting](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/privacy/wx.getPrivacySetting.html)
+  - [微信客服](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/service-chat/wx.openCustomerServiceChat.html)
+    - [wx.openCustomerServiceChat](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/service-chat/wx.openCustomerServiceChat.html)
+  - [微信表情](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/sticker/wx.openStickerSetView.html)
+    - [wx.openStickerSetView](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/sticker/wx.openStickerSetView.html)
+    - [wx.openStickerIPView](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/sticker/wx.openStickerIPView.html)
+    - [wx.openSingleStickerView](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/sticker/wx.openSingleStickerView.html)
+- [设备](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.stopBluetoothDevicesDiscovery.html)
+  - [蓝牙-通用](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.stopBluetoothDevicesDiscovery.html)
+    - [wx.stopBluetoothDevicesDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.stopBluetoothDevicesDiscovery.html)
+    - [wx.startBluetoothDevicesDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.startBluetoothDevicesDiscovery.html)
+    - [wx.openBluetoothAdapter](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.openBluetoothAdapter.html)
+    - [wx.onBluetoothDeviceFound](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.onBluetoothDeviceFound.html)
+    - [wx.onBluetoothAdapterStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.onBluetoothAdapterStateChange.html)
+    - [wx.offBluetoothDeviceFound](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.offBluetoothDeviceFound.html)
+    - [wx.offBluetoothAdapterStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.offBluetoothAdapterStateChange.html)
+    - [wx.makeBluetoothPair](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.makeBluetoothPair.html)
+    - [wx.isBluetoothDevicePaired](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.isBluetoothDevicePaired.html)
+    - [wx.getConnectedBluetoothDevices](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.getConnectedBluetoothDevices.html)
+    - [wx.getBluetoothDevices](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.getBluetoothDevices.html)
+    - [wx.getBluetoothAdapterState](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.getBluetoothAdapterState.html)
+    - [wx.closeBluetoothAdapter](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.closeBluetoothAdapter.html)
+  - [蓝牙-低功耗中心设备](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.writeBLECharacteristicValue.html)
+    - [wx.writeBLECharacteristicValue](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.writeBLECharacteristicValue.html)
+    - [wx.setBLEMTU](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.setBLEMTU.html)
+    - [wx.readBLECharacteristicValue](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.readBLECharacteristicValue.html)
+    - [wx.onBLEMTUChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.onBLEMTUChange.html)
+    - [wx.onBLEConnectionStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.onBLEConnectionStateChange.html)
+    - [wx.onBLECharacteristicValueChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.onBLECharacteristicValueChange.html)
+    - [wx.offBLEMTUChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.offBLEMTUChange.html)
+    - [wx.offBLEConnectionStateChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.offBLEConnectionStateChange.html)
+    - [wx.offBLECharacteristicValueChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.offBLECharacteristicValueChange.html)
+    - [wx.notifyBLECharacteristicValueChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.notifyBLECharacteristicValueChange.html)
+    - [wx.getBLEMTU](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.getBLEMTU.html)
+    - [wx.getBLEDeviceServices](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.getBLEDeviceServices.html)
+    - [wx.getBLEDeviceRSSI](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.getBLEDeviceRSSI.html)
+    - [wx.getBLEDeviceCharacteristics](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.getBLEDeviceCharacteristics.html)
+    - [wx.createBLEConnection](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.createBLEConnection.html)
+    - [wx.closeBLEConnection](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.closeBLEConnection.html)
+  - [蓝牙-低功耗外围设备](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/wx.onBLEPeripheralConnectionStateChanged.html)
+    - [wx.onBLEPeripheralConnectionStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/wx.onBLEPeripheralConnectionStateChanged.html)
+    - [wx.offBLEPeripheralConnectionStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/wx.offBLEPeripheralConnectionStateChanged.html)
+    - [wx.createBLEPeripheralServer](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/wx.createBLEPeripheralServer.html)
+    - [BLEPeripheralServer](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.html)
+      - [BLEPeripheralServer.addService](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.addService.html)
+      - [BLEPeripheralServer.close](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.close.html)
+      - [BLEPeripheralServer.offCharacteristicReadRequest](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.offCharacteristicReadRequest.html)
+      - [BLEPeripheralServer.offCharacteristicSubscribed](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.offCharacteristicSubscribed.html)
+      - [BLEPeripheralServer.offCharacteristicUnsubscribed](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.offCharacteristicUnsubscribed.html)
+      - [BLEPeripheralServer.offCharacteristicWriteRequest](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.offCharacteristicWriteRequest.html)
+      - [BLEPeripheralServer.onCharacteristicReadRequest](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.onCharacteristicReadRequest.html)
+      - [BLEPeripheralServer.onCharacteristicSubscribed](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.onCharacteristicSubscribed.html)
+      - [BLEPeripheralServer.onCharacteristicUnsubscribed](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.onCharacteristicUnsubscribed.html)
+      - [BLEPeripheralServer.onCharacteristicWriteRequest](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.onCharacteristicWriteRequest.html)
+      - [BLEPeripheralServer.removeService](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.removeService.html)
+      - [BLEPeripheralServer.startAdvertising](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.startAdvertising.html)
+      - [BLEPeripheralServer.stopAdvertising](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.stopAdvertising.html)
+      - [BLEPeripheralServer.writeCharacteristicValue](https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-peripheral/BLEPeripheralServer.writeCharacteristicValue.html)
+  - [蓝牙-信标(Beacon)](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.stopBeaconDiscovery.html)
+    - [wx.stopBeaconDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.stopBeaconDiscovery.html)
+    - [wx.startBeaconDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.startBeaconDiscovery.html)
+    - [wx.onBeaconUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.onBeaconUpdate.html)
+    - [wx.onBeaconServiceChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.onBeaconServiceChange.html)
+    - [wx.offBeaconUpdate](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.offBeaconUpdate.html)
+    - [wx.offBeaconServiceChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.offBeaconServiceChange.html)
+    - [wx.getBeacons](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.getBeacons.html)
+    - [BeaconInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/BeaconInfo.html)
+  - [NFC 读写](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.removeSecureElementPass.html)
+    - [wx.removeSecureElementPass](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.removeSecureElementPass.html)
+    - [wx.rechargeTransitCard](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.rechargeTransitCard.html)
+    - [wx.issueTransitCard](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.issueTransitCard.html)
+    - [wx.getTransitCardList](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.getTransitCardList.html)
+    - [wx.getTransitCardInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.getTransitCardInfo.html)
+    - [wx.getTransitCardCPLC](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.getTransitCardCPLC.html)
+    - [wx.getSecureElementPasses](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.getSecureElementPasses.html)
+    - [wx.getNFCAdapter](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.getNFCAdapter.html)
+    - [wx.deleteTransitCard](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.deleteTransitCard.html)
+    - [wx.checkTransitCardSupport](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.checkTransitCardSupport.html)
+    - [wx.canAddSecureElementPass](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.canAddSecureElementPass.html)
+    - [wx.addPaymentPassGetCertificateData](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.addPaymentPassGetCertificateData.html)
+    - [wx.addPaymentPassFinish](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.addPaymentPassFinish.html)
+    - [IsoDep](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/IsoDep.html)
+      - [IsoDep.close](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/IsoDep.close.html)
+      - [IsoDep.connect](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/IsoDep.connect.html)
+      - [IsoDep.getHistoricalBytes](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/IsoDep.getHistoricalBytes.html)
+      - [IsoDep.getMaxTransceiveLength](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/IsoDep.getMaxTransceiveLength.html)
+      - [IsoDep.isConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/IsoDep.isConnected.html)
+      - [IsoDep.setTimeout](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/IsoDep.setTimeout.html)
+      - [IsoDep.transceive](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/IsoDep.transceive.html)
+    - [MifareClassic](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareClassic.html)
+      - [MifareClassic.close](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareClassic.close.html)
+      - [MifareClassic.connect](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareClassic.connect.html)
+      - [MifareClassic.getMaxTransceiveLength](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareClassic.getMaxTransceiveLength.html)
+      - [MifareClassic.isConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareClassic.isConnected.html)
+      - [MifareClassic.setTimeout](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareClassic.setTimeout.html)
+      - [MifareClassic.transceive](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareClassic.transceive.html)
+    - [MifareUltralight](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareUltralight.html)
+      - [MifareUltralight.close](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareUltralight.close.html)
+      - [MifareUltralight.connect](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareUltralight.connect.html)
+      - [MifareUltralight.getMaxTransceiveLength](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareUltralight.getMaxTransceiveLength.html)
+      - [MifareUltralight.isConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareUltralight.isConnected.html)
+      - [MifareUltralight.setTimeout](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareUltralight.setTimeout.html)
+      - [MifareUltralight.transceive](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/MifareUltralight.transceive.html)
+    - [Ndef](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/Ndef.html)
+      - [Ndef.close](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/Ndef.close.html)
+      - [Ndef.connect](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/Ndef.connect.html)
+      - [Ndef.isConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/Ndef.isConnected.html)
+      - [Ndef.offNdefMessage](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/Ndef.offNdefMessage.html)
+      - [Ndef.onNdefMessage](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/Ndef.onNdefMessage.html)
+      - [Ndef.setTimeout](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/Ndef.setTimeout.html)
+      - [Ndef.writeNdefMessage](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/Ndef.writeNdefMessage.html)
+    - [NfcA](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcA.html)
+      - [NfcA.close](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcA.close.html)
+      - [NfcA.connect](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcA.connect.html)
+      - [NfcA.getAtqa](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcA.getAtqa.html)
+      - [NfcA.getMaxTransceiveLength](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcA.getMaxTransceiveLength.html)
+      - [NfcA.getSak](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcA.getSak.html)
+      - [NfcA.isConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcA.isConnected.html)
+      - [NfcA.setTimeout](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcA.setTimeout.html)
+      - [NfcA.transceive](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcA.transceive.html)
+    - [NFCAdapter](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.html)
+      - [NFCAdapter.getIsoDep](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getIsoDep.html)
+      - [NFCAdapter.getMifareClassic](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getMifareClassic.html)
+      - [NFCAdapter.getMifareUltralight](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getMifareUltralight.html)
+      - [NFCAdapter.getNdef](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getNdef.html)
+      - [NFCAdapter.getNfcA](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getNfcA.html)
+      - [NFCAdapter.getNfcB](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getNfcB.html)
+      - [NFCAdapter.getNfcF](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getNfcF.html)
+      - [NFCAdapter.getNfcV](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.getNfcV.html)
+      - [NFCAdapter.offDiscovered](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.offDiscovered.html)
+      - [NFCAdapter.onDiscovered](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.onDiscovered.html)
+      - [NFCAdapter.startDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.startDiscovery.html)
+      - [NFCAdapter.stopDiscovery](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NFCAdapter.stopDiscovery.html)
+    - [NfcB](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcB.html)
+      - [NfcB.close](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcB.close.html)
+      - [NfcB.connect](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcB.connect.html)
+      - [NfcB.getMaxTransceiveLength](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcB.getMaxTransceiveLength.html)
+      - [NfcB.isConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcB.isConnected.html)
+      - [NfcB.setTimeout](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcB.setTimeout.html)
+      - [NfcB.transceive](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcB.transceive.html)
+    - [NfcF](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcF.html)
+      - [NfcF.close](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcF.close.html)
+      - [NfcF.connect](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcF.connect.html)
+      - [NfcF.getMaxTransceiveLength](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcF.getMaxTransceiveLength.html)
+      - [NfcF.isConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcF.isConnected.html)
+      - [NfcF.setTimeout](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcF.setTimeout.html)
+      - [NfcF.transceive](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcF.transceive.html)
+    - [NfcV](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcV.html)
+      - [NfcV.close](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcV.close.html)
+      - [NfcV.connect](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcV.connect.html)
+      - [NfcV.getMaxTransceiveLength](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcV.getMaxTransceiveLength.html)
+      - [NfcV.isConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcV.isConnected.html)
+      - [NfcV.setTimeout](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcV.setTimeout.html)
+      - [NfcV.transceive](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/NfcV.transceive.html)
+  - [Wi-Fi](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.stopWifi.html)
+    - [wx.stopWifi](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.stopWifi.html)
+    - [wx.startWifi](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.startWifi.html)
+    - [wx.setWifiList](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.setWifiList.html)
+    - [wx.onWifiConnectedWithPartialInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.onWifiConnectedWithPartialInfo.html)
+    - [wx.onWifiConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.onWifiConnected.html)
+    - [wx.onGetWifiList](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.onGetWifiList.html)
+    - [wx.offWifiConnectedWithPartialInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.offWifiConnectedWithPartialInfo.html)
+    - [wx.offWifiConnected](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.offWifiConnected.html)
+    - [wx.offGetWifiList](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.offGetWifiList.html)
+    - [wx.getWifiList](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.getWifiList.html)
+    - [wx.getConnectedWifi](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.getConnectedWifi.html)
+    - [wx.connectWifi](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.connectWifi.html)
+    - [WifiInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/WifiInfo.html)
+  - [日历](https://developers.weixin.qq.com/miniprogram/dev/api/device/calendar/wx.addPhoneRepeatCalendar.html)
+    - [wx.addPhoneRepeatCalendar](https://developers.weixin.qq.com/miniprogram/dev/api/device/calendar/wx.addPhoneRepeatCalendar.html)
+    - [wx.addPhoneCalendar](https://developers.weixin.qq.com/miniprogram/dev/api/device/calendar/wx.addPhoneCalendar.html)
+  - [联系人](https://developers.weixin.qq.com/miniprogram/dev/api/device/contact/wx.chooseContact.html)
+    - [wx.chooseContact](https://developers.weixin.qq.com/miniprogram/dev/api/device/contact/wx.chooseContact.html)
+    - [wx.addPhoneContact](https://developers.weixin.qq.com/miniprogram/dev/api/device/contact/wx.addPhoneContact.html)
+  - [无障碍](https://developers.weixin.qq.com/miniprogram/dev/api/device/accessibility/wx.checkIsOpenAccessibility.html)
+    - [wx.checkIsOpenAccessibility](https://developers.weixin.qq.com/miniprogram/dev/api/device/accessibility/wx.checkIsOpenAccessibility.html)
+  - [电量](https://developers.weixin.qq.com/miniprogram/dev/api/device/battery/wx.onBatteryInfoChange.html)
+    - [wx.onBatteryInfoChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/battery/wx.onBatteryInfoChange.html)
+    - [wx.offBatteryInfoChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/battery/wx.offBatteryInfoChange.html)
+    - [wx.getBatteryInfoSync](https://developers.weixin.qq.com/miniprogram/dev/api/device/battery/wx.getBatteryInfoSync.html)
+    - [wx.getBatteryInfo](https://developers.weixin.qq.com/miniprogram/dev/api/device/battery/wx.getBatteryInfo.html)
+  - [剪贴板](https://developers.weixin.qq.com/miniprogram/dev/api/device/clipboard/wx.setClipboardData.html)
+    - [wx.setClipboardData](https://developers.weixin.qq.com/miniprogram/dev/api/device/clipboard/wx.setClipboardData.html)
+    - [wx.getClipboardData](https://developers.weixin.qq.com/miniprogram/dev/api/device/clipboard/wx.getClipboardData.html)
+  - [NFC 主机卡模拟](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.stopHCE.html)
+    - [wx.stopHCE](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.stopHCE.html)
+    - [wx.startHCE](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.startHCE.html)
+    - [wx.sendHCEMessage](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.sendHCEMessage.html)
+    - [wx.onHCEMessage](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.onHCEMessage.html)
+    - [wx.offHCEMessage](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.offHCEMessage.html)
+    - [wx.getHCEState](https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc-hce/wx.getHCEState.html)
+  - [网络](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.onNetworkWeakChange.html)
+    - [wx.onNetworkWeakChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.onNetworkWeakChange.html)
+    - [wx.onNetworkStatusChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.onNetworkStatusChange.html)
+    - [wx.offNetworkWeakChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.offNetworkWeakChange.html)
+    - [wx.offNetworkStatusChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.offNetworkStatusChange.html)
+    - [wx.getNetworkType](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.getNetworkType.html)
+    - [wx.getLocalIPAddress](https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.getLocalIPAddress.html)
+  - [加密](https://developers.weixin.qq.com/miniprogram/dev/api/device/crypto/wx.getRandomValues.html)
+    - [wx.getRandomValues](https://developers.weixin.qq.com/miniprogram/dev/api/device/crypto/wx.getRandomValues.html)
+  - [屏幕](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.setVisualEffectOnCapture.html)
+    - [wx.setVisualEffectOnCapture](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.setVisualEffectOnCapture.html)
+    - [wx.setScreenBrightness](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.setScreenBrightness.html)
+    - [wx.setKeepScreenOn](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.setKeepScreenOn.html)
+    - [wx.onUserCaptureScreen](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.onUserCaptureScreen.html)
+    - [wx.onScreenRecordingStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.onScreenRecordingStateChanged.html)
+    - [wx.onGeneratePoster](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.onGeneratePoster.html)
+    - [wx.offUserCaptureScreen](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.offUserCaptureScreen.html)
+    - [wx.offScreenRecordingStateChanged](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.offScreenRecordingStateChanged.html)
+    - [wx.offGeneratePoster](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.offGeneratePoster.html)
+    - [wx.getScreenRecordingState](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.getScreenRecordingState.html)
+    - [wx.getScreenBrightness](https://developers.weixin.qq.com/miniprogram/dev/api/device/screen/wx.getScreenBrightness.html)
+  - [键盘](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.onKeyUp.html)
+    - [wx.onKeyUp](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.onKeyUp.html)
+    - [wx.onKeyDown](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.onKeyDown.html)
+    - [wx.onKeyboardHeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.onKeyboardHeightChange.html)
+    - [wx.offKeyUp](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.offKeyUp.html)
+    - [wx.offKeyDown](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.offKeyDown.html)
+    - [wx.offKeyboardHeightChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.offKeyboardHeightChange.html)
+    - [wx.hideKeyboard](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.hideKeyboard.html)
+    - [wx.getSelectedTextRange](https://developers.weixin.qq.com/miniprogram/dev/api/device/keyboard/wx.getSelectedTextRange.html)
+  - [电话](https://developers.weixin.qq.com/miniprogram/dev/api/device/phone/wx.makePhoneCall.html)
+    - [wx.makePhoneCall](https://developers.weixin.qq.com/miniprogram/dev/api/device/phone/wx.makePhoneCall.html)
+  - [加速计](https://developers.weixin.qq.com/miniprogram/dev/api/device/accelerometer/wx.stopAccelerometer.html)
+    - [wx.stopAccelerometer](https://developers.weixin.qq.com/miniprogram/dev/api/device/accelerometer/wx.stopAccelerometer.html)
+    - [wx.startAccelerometer](https://developers.weixin.qq.com/miniprogram/dev/api/device/accelerometer/wx.startAccelerometer.html)
+    - [wx.onAccelerometerChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/accelerometer/wx.onAccelerometerChange.html)
+    - [wx.offAccelerometerChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/accelerometer/wx.offAccelerometerChange.html)
+  - [罗盘](https://developers.weixin.qq.com/miniprogram/dev/api/device/compass/wx.stopCompass.html)
+    - [wx.stopCompass](https://developers.weixin.qq.com/miniprogram/dev/api/device/compass/wx.stopCompass.html)
+    - [wx.startCompass](https://developers.weixin.qq.com/miniprogram/dev/api/device/compass/wx.startCompass.html)
+    - [wx.onCompassChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/compass/wx.onCompassChange.html)
+    - [wx.offCompassChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/compass/wx.offCompassChange.html)
+  - [设备方向](https://developers.weixin.qq.com/miniprogram/dev/api/device/motion/wx.stopDeviceMotionListening.html)
+    - [wx.stopDeviceMotionListening](https://developers.weixin.qq.com/miniprogram/dev/api/device/motion/wx.stopDeviceMotionListening.html)
+    - [wx.startDeviceMotionListening](https://developers.weixin.qq.com/miniprogram/dev/api/device/motion/wx.startDeviceMotionListening.html)
+    - [wx.onDeviceMotionChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/motion/wx.onDeviceMotionChange.html)
+    - [wx.offDeviceMotionChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/motion/wx.offDeviceMotionChange.html)
+  - [陀螺仪](https://developers.weixin.qq.com/miniprogram/dev/api/device/gyroscope/wx.stopGyroscope.html)
+    - [wx.stopGyroscope](https://developers.weixin.qq.com/miniprogram/dev/api/device/gyroscope/wx.stopGyroscope.html)
+    - [wx.startGyroscope](https://developers.weixin.qq.com/miniprogram/dev/api/device/gyroscope/wx.startGyroscope.html)
+    - [wx.onGyroscopeChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/gyroscope/wx.onGyroscopeChange.html)
+    - [wx.offGyroscopeChange](https://developers.weixin.qq.com/miniprogram/dev/api/device/gyroscope/wx.offGyroscopeChange.html)
+  - [内存](https://developers.weixin.qq.com/miniprogram/dev/api/device/memory/wx.onMemoryWarning.html)
+    - [wx.onMemoryWarning](https://developers.weixin.qq.com/miniprogram/dev/api/device/memory/wx.onMemoryWarning.html)
+    - [wx.offMemoryWarning](https://developers.weixin.qq.com/miniprogram/dev/api/device/memory/wx.offMemoryWarning.html)
+  - [扫码](https://developers.weixin.qq.com/miniprogram/dev/api/device/scan/wx.scanCode.html)
+    - [wx.scanCode](https://developers.weixin.qq.com/miniprogram/dev/api/device/scan/wx.scanCode.html)
+  - [短信](https://developers.weixin.qq.com/miniprogram/dev/api/device/sms/wx.sendSms.html)
+    - [wx.sendSms](https://developers.weixin.qq.com/miniprogram/dev/api/device/sms/wx.sendSms.html)
+  - [振动](https://developers.weixin.qq.com/miniprogram/dev/api/device/vibrate/wx.vibrateShort.html)
+    - [wx.vibrateShort](https://developers.weixin.qq.com/miniprogram/dev/api/device/vibrate/wx.vibrateShort.html)
+    - [wx.vibrateLong](https://developers.weixin.qq.com/miniprogram/dev/api/device/vibrate/wx.vibrateLong.html)
+- [AI](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/wx.getInferenceEnvInfo.html)
+  - [AI 推理](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/wx.getInferenceEnvInfo.html)
+    - [wx.getInferenceEnvInfo](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/wx.getInferenceEnvInfo.html)
+    - [wx.createInferenceSession](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/wx.createInferenceSession.html)
+    - [InferenceSession](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/InferenceSession.html)
+      - [InferenceSession.destroy](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/InferenceSession.destroy.html)
+      - [InferenceSession.offError](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/InferenceSession.offError.html)
+      - [InferenceSession.offLoad](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/InferenceSession.offLoad.html)
+      - [InferenceSession.onError](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/InferenceSession.onError.html)
+      - [InferenceSession.onLoad](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/InferenceSession.onLoad.html)
+      - [InferenceSession.run](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/InferenceSession.run.html)
+    - [Tensor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/Tensor.html)
+    - [Tensors](https://developers.weixin.qq.com/miniprogram/dev/api/ai/inference/Tensors.html)
+  - [视觉算法](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/wx.isVKSupport.html)
+    - [wx.isVKSupport](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/wx.isVKSupport.html)
+    - [wx.createVKSession](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/wx.createVKSession.html)
+    - [VKBodyAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKBodyAnchor.html)
+    - [VKCamera](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKCamera.html)
+      - [VKCamera.getProjectionMatrix](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKCamera.getProjectionMatrix.html)
+    - [VKDepthAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKDepthAnchor.html)
+    - [VKFaceAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKFaceAnchor.html)
+    - [VKFrame](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKFrame.html)
+      - [VKFrame.getCameraBuffer](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKFrame.getCameraBuffer.html)
+      - [VKFrame.getCameraJpgBuffer](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKFrame.getCameraJpgBuffer.html)
+      - [VKFrame.getCameraTexture](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKFrame.getCameraTexture.html)
+      - [VKFrame.getDepthBuffer](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKFrame.getDepthBuffer.html)
+      - [VKFrame.getDisplayTransform](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKFrame.getDisplayTransform.html)
+      - [VKFrame.getLegSegmentBuffer](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKFrame.getLegSegmentBuffer.html)
+    - [VKHandAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKHandAnchor.html)
+    - [VKMarkerAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKMarkerAnchor.html)
+    - [VKOCRAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKOCRAnchor.html)
+    - [VKOSDAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKOSDAnchor.html)
+    - [VKPlaneAnchor](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKPlaneAnchor.html)
+    - [VKSession](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.html)
+      - [VKSession.addMarker](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.addMarker.html)
+      - [VKSession.addOSDMarker](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.addOSDMarker.html)
+      - [VKSession.cancelAnimationFrame](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.cancelAnimationFrame.html)
+      - [VKSession.destroy](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.destroy.html)
+      - [VKSession.detectBody](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.detectBody.html)
+      - [VKSession.detectDepth](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.detectDepth.html)
+      - [VKSession.detectFace](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.detectFace.html)
+      - [VKSession.detectHand](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.detectHand.html)
+      - [VKSession.getAllMarker](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.getAllMarker.html)
+      - [VKSession.getAllOSDMarker](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.getAllOSDMarker.html)
+      - [VKSession.getVKFrame](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.getVKFrame.html)
+      - [VKSession.hitTest](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.hitTest.html)
+      - [VKSession.off](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.off.html)
+      - [VKSession.on](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.on.html)
+      - [VKSession.removeMarker](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.removeMarker.html)
+      - [VKSession.removeOSDMarker](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.removeOSDMarker.html)
+      - [VKSession.requestAnimationFrame](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.requestAnimationFrame.html)
+      - [VKSession.runOCR](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.runOCR.html)
+      - [VKSession.setDepthOccRange](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.setDepthOccRange.html)
+      - [VKSession.start](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.start.html)
+      - [VKSession.stop](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.stop.html)
+      - [VKSession.update3DMode](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.update3DMode.html)
+      - [VKSession.updateMaskMode](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.updateMaskMode.html)
+      - [VKSession.updateOSDThreshold](https://developers.weixin.qq.com/miniprogram/dev/api/ai/visionkit/VKSession.updateOSDThreshold.html)
+  - [人脸检测](https://developers.weixin.qq.com/miniprogram/dev/api/ai/face/wx.stopFaceDetect.html)
+    - [wx.stopFaceDetect](https://developers.weixin.qq.com/miniprogram/dev/api/ai/face/wx.stopFaceDetect.html)
+    - [wx.initFaceDetect](https://developers.weixin.qq.com/miniprogram/dev/api/ai/face/wx.initFaceDetect.html)
+    - [wx.faceDetect](https://developers.weixin.qq.com/miniprogram/dev/api/ai/face/wx.faceDetect.html)
+- [Worker](https://developers.weixin.qq.com/miniprogram/dev/api/worker/wx.createWorker.html)
+  - [wx.createWorker](https://developers.weixin.qq.com/miniprogram/dev/api/worker/wx.createWorker.html)
+  - [Worker](https://developers.weixin.qq.com/miniprogram/dev/api/worker/Worker.html)
+    - [Worker.getCameraFrameData](https://developers.weixin.qq.com/miniprogram/dev/api/worker/Worker.getCameraFrameData.html)
+    - [Worker.onError](https://developers.weixin.qq.com/miniprogram/dev/api/worker/Worker.onError.html)
+    - [Worker.onMessage](https://developers.weixin.qq.com/miniprogram/dev/api/worker/Worker.onMessage.html)
+    - [Worker.onProcessKilled](https://developers.weixin.qq.com/miniprogram/dev/api/worker/Worker.onProcessKilled.html)
+    - [Worker.postMessage](https://developers.weixin.qq.com/miniprogram/dev/api/worker/Worker.postMessage.html)
+    - [Worker.terminate](https://developers.weixin.qq.com/miniprogram/dev/api/worker/Worker.terminate.html)
+    - [Worker.testOnProcessKilled](https://developers.weixin.qq.com/miniprogram/dev/api/worker/Worker.testOnProcessKilled.html)
+- [WXML](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/wx.createSelectorQuery.html)
+  - [wx.createSelectorQuery](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/wx.createSelectorQuery.html)
+  - [wx.createIntersectionObserver](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/wx.createIntersectionObserver.html)
+  - [IntersectionObserver](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/IntersectionObserver.html)
+    - [IntersectionObserver.disconnect](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/IntersectionObserver.disconnect.html)
+    - [IntersectionObserver.observe](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/IntersectionObserver.observe.html)
+    - [IntersectionObserver.relativeTo](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/IntersectionObserver.relativeTo.html)
+    - [IntersectionObserver.relativeToViewport](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/IntersectionObserver.relativeToViewport.html)
+  - [MediaQueryObserver](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/MediaQueryObserver.html)
+    - [MediaQueryObserver.disconnect](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/MediaQueryObserver.disconnect.html)
+    - [MediaQueryObserver.observe](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/MediaQueryObserver.observe.html)
+  - [NodesRef](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/NodesRef.html)
+    - [NodesRef.boundingClientRect](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/NodesRef.boundingClientRect.html)
+    - [NodesRef.context](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/NodesRef.context.html)
+    - [NodesRef.fields](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/NodesRef.fields.html)
+    - [NodesRef.node](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/NodesRef.node.html)
+    - [NodesRef.ref](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/NodesRef.ref.html)
+    - [NodesRef.scrollOffset](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/NodesRef.scrollOffset.html)
+  - [SelectorQuery](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/SelectorQuery.html)
+    - [SelectorQuery.exec](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/SelectorQuery.exec.html)
+    - [SelectorQuery.in](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/SelectorQuery.in.html)
+    - [SelectorQuery.select](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/SelectorQuery.select.html)
+    - [SelectorQuery.selectAll](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/SelectorQuery.selectAll.html)
+    - [SelectorQuery.selectViewport](https://developers.weixin.qq.com/miniprogram/dev/api/wxml/SelectorQuery.selectViewport.html)
+- [第三方平台](https://developers.weixin.qq.com/miniprogram/dev/api/ext/wx.getExtConfigSync.html)
+  - [wx.getExtConfigSync](https://developers.weixin.qq.com/miniprogram/dev/api/ext/wx.getExtConfigSync.html)
+  - [wx.getExtConfig](https://developers.weixin.qq.com/miniprogram/dev/api/ext/wx.getExtConfig.html)
+- [广告](https://developers.weixin.qq.com/miniprogram/dev/api/ad/wx.getShowSplashAdStatus.html)
+  - [wx.getShowSplashAdStatus](https://developers.weixin.qq.com/miniprogram/dev/api/ad/wx.getShowSplashAdStatus.html)
+  - [wx.createRewardedVideoAd](https://developers.weixin.qq.com/miniprogram/dev/api/ad/wx.createRewardedVideoAd.html)
+  - [wx.createInterstitialAd](https://developers.weixin.qq.com/miniprogram/dev/api/ad/wx.createInterstitialAd.html)
+  - [InterstitialAd](https://developers.weixin.qq.com/miniprogram/dev/api/ad/InterstitialAd.html)
+    - [InterstitialAd.destroy](https://developers.weixin.qq.com/miniprogram/dev/api/ad/InterstitialAd.destroy.html)
+    - [InterstitialAd.load](https://developers.weixin.qq.com/miniprogram/dev/api/ad/InterstitialAd.load.html)
+    - [InterstitialAd.offClose](https://developers.weixin.qq.com/miniprogram/dev/api/ad/InterstitialAd.offClose.html)
+    - [InterstitialAd.offError](https://developers.weixin.qq.com/miniprogram/dev/api/ad/InterstitialAd.offError.html)
+    - [InterstitialAd.offLoad](https://developers.weixin.qq.com/miniprogram/dev/api/ad/InterstitialAd.offLoad.html)
+    - [InterstitialAd.onClose](https://developers.weixin.qq.com/miniprogram/dev/api/ad/InterstitialAd.onClose.html)
+    - [InterstitialAd.onError](https://developers.weixin.qq.com/miniprogram/dev/api/ad/InterstitialAd.onError.html)
+    - [InterstitialAd.onLoad](https://developers.weixin.qq.com/miniprogram/dev/api/ad/InterstitialAd.onLoad.html)
+    - [InterstitialAd.show](https://developers.weixin.qq.com/miniprogram/dev/api/ad/InterstitialAd.show.html)
+  - [RewardedVideoAd](https://developers.weixin.qq.com/miniprogram/dev/api/ad/RewardedVideoAd.html)
+    - [RewardedVideoAd.destroy](https://developers.weixin.qq.com/miniprogram/dev/api/ad/RewardedVideoAd.destroy.html)
+    - [RewardedVideoAd.load](https://developers.weixin.qq.com/miniprogram/dev/api/ad/RewardedVideoAd.load.html)
+    - [RewardedVideoAd.offClose](https://developers.weixin.qq.com/miniprogram/dev/api/ad/RewardedVideoAd.offClose.html)
+    - [RewardedVideoAd.offError](https://developers.weixin.qq.com/miniprogram/dev/api/ad/RewardedVideoAd.offError.html)
+    - [RewardedVideoAd.offLoad](https://developers.weixin.qq.com/miniprogram/dev/api/ad/RewardedVideoAd.offLoad.html)
+    - [RewardedVideoAd.onClose](https://developers.weixin.qq.com/miniprogram/dev/api/ad/RewardedVideoAd.onClose.html)
+    - [RewardedVideoAd.onError](https://developers.weixin.qq.com/miniprogram/dev/api/ad/RewardedVideoAd.onError.html)
+    - [RewardedVideoAd.onLoad](https://developers.weixin.qq.com/miniprogram/dev/api/ad/RewardedVideoAd.onLoad.html)
+    - [RewardedVideoAd.show](https://developers.weixin.qq.com/miniprogram/dev/api/ad/RewardedVideoAd.show.html)
+- [Skyline](https://developers.weixin.qq.com/miniprogram/dev/api/skyline/DraggableSheetContext.scrollTo.html)
+  - [DraggableSheetContext](https://developers.weixin.qq.com/miniprogram/dev/api/skyline/DraggableSheetContext.html)
+    - [DraggableSheetContext.scrollTo](https://developers.weixin.qq.com/miniprogram/dev/api/skyline/DraggableSheetContext.scrollTo.html)
+  - [OpenContainer](https://developers.weixin.qq.com/miniprogram/dev/api/skyline/OpenContainer.html)
+  - [Snapshot](https://developers.weixin.qq.com/miniprogram/dev/api/skyline/Snapshot.html)
+    - [Snapshot.takeSnapshot](https://developers.weixin.qq.com/miniprogram/dev/api/skyline/Snapshot.takeSnapshot.html)
+- [XR-FRAME](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html)
+  - [导览注意](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/guide.html)
+  - [Enumerations](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EARTrackerState.html)
+    - [EARTrackerState](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EARTrackerState.html)
+    - [EAnimationBlendType](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EAnimationBlendType.html)
+    - [EBlendEquation](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EBlendEquation.html)
+    - [EBlendFactor](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EBlendFactor.html)
+    - [EColorMask](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EColorMask.html)
+    - [ECompareFunc](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/ECompareFunc.html)
+    - [ECullMode](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/ECullMode.html)
+    - [EDataModelType](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EDataModelType.html)
+    - [EEventType](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EEventType.html)
+    - [EFaceWinding](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EFaceWinding.html)
+    - [EFilterMode](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EFilterMode.html)
+    - [EIndexType](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EIndexType.html)
+    - [ELoadAction](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/ELoadAction.html)
+    - [EMeshRenderType](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EMeshRenderType.html)
+    - [EPixelType](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EPixelType.html)
+    - [EPrimitiveType](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EPrimitiveType.html)
+    - [EShareRecordState](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EShareRecordState.html)
+    - [EShadowFitMode](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EShadowFitMode.html)
+    - [EShadowMode](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EShadowMode.html)
+    - [EShapeType](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EShapeType.html)
+    - [EStencilOp](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EStencilOp.html)
+    - [ETextureFormat](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/ETextureFormat.html)
+    - [ETextureType](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/ETextureType.html)
+    - [EUniformType](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EUniformType.html)
+    - [EUseDefaultAddedAction](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EUseDefaultAddedAction.html)
+    - [EUseDefaultRemovedAction](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EUseDefaultRemovedAction.html)
+    - [EUseDefaultRetainedAction](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EUseDefaultRetainedAction.html)
+    - [EVertexBatchOperator](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EVertexBatchOperator.html)
+    - [EVertexFormat](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EVertexFormat.html)
+    - [EVertexLayoutUsage](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EVertexLayoutUsage.html)
+    - [EVertexStep](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EVertexStep.html)
+    - [EVideoState](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EVideoState.html)
+    - [EWrapMode](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/EWrapMode.html)
+    - [ECapsuleShapeDirection](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/enums/ECapsuleShapeDirection.html)
+  - [Classes](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Component.html)
+    - [ARSystem](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/ARSystem.html)
+    - [ARTracker](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/ARTracker.html)
+    - [Animation](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Animation.html)
+    - [AnimationSystem](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/AnimationSystem.html)
+    - [Animator](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Animator.html)
+    - [AssetLoad](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/AssetLoad.html)
+    - [AssetLoader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/AssetLoader.html)
+    - [AssetMaterial](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/AssetMaterial.html)
+    - [AssetPostProcess](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/AssetPostProcess.html)
+    - [AssetRenderTexture](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/AssetRenderTexture.html)
+    - [Assets](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Assets.html)
+    - [AssetsSystem](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/AssetsSystem.html)
+    - [Atlas](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Atlas.html)
+    - [AtlasLoader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/AtlasLoader.html)
+    - [BoundBall](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/BoundBall.html)
+    - [BoundBox](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/BoundBox.html)
+    - [Camera](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Camera.html)
+    - [CameraOrbitControl](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/CameraOrbitControl.html)
+    - [CapsuleShape](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/CapsuleShape.html)
+    - [Color](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Color.html)
+    - [Component](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Component.html)
+    - [CubeShape](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/CubeShape.html)
+    - [CubeTextureLoader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/CubeTextureLoader.html)
+    - [Effect](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Effect.html)
+    - [Element](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Element.html)
+    - [Env](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Env.html)
+    - [EnvData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/EnvData.html)
+    - [EnvDataLoader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/EnvDataLoader.html)
+    - [EventManager](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/EventManager.html)
+    - [GLTF](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/GLTF.html)
+    - [GLTFLoader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/GlTFLoader.html)
+    - [GLTFModel](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/GLTFModel.html)
+    - [Geometry](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Geometry.html)
+    - [GizmoSystem](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/GizmoSystem.html)
+    - [ImageLoader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/ImageLoader.html)
+    - [KeyframeAnimation](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/KeyframeAnimation.html)
+    - [KeyframeLoader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/KeyframeLoader.html)
+    - [Light](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Light.html)
+    - [Material](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Material.html)
+    - [Matrix3](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Matrix3.html)
+    - [Matrix4](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Matrix4.html)
+    - [Mesh](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Mesh.html)
+    - [MeshShape](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/MeshShape.html)
+    - [NodeSystem](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/NodeSystem.html)
+    - [OBB](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/OBB.html)
+    - [Particle](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Particle.html)
+    - [PhysicsSystem](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/PhysicsSystem.html)
+    - [PostProcess](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/PostProcess.html)
+    - [Quaternion](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Quaternion.html)
+    - [RawLoader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/RawLoader.html)
+    - [RaycastHit](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/RaycastHit.html)
+    - [RenderSystem](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/RenderSystem.html)
+    - [RenderTexture](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/RenderTexture.html)
+    - [Scene](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Scene.html)
+    - [Shape](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Shape.html)
+    - [ShapeGizmos](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/ShapeGizmos.html)
+    - [ShapeInteract](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/ShapeInteract.html)
+    - [ShareSystem](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/ShareSystem.html)
+    - [SphereShape](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/SphereShape.html)
+    - [Spherical](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Spherical.html)
+    - [Text](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Text.html)
+    - [TextureLoader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/TextureLoader.html)
+    - [TickSystem](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/TickSystem.html)
+    - [Transform](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Transform.html)
+    - [Vector2](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Vector2.html)
+    - [Vector3](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Vector3.html)
+    - [Vector4](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Vector4.html)
+    - [VideoSystem](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/VideoSystem.html)
+    - [VideoTexture](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/VideoTexture.html)
+    - [VideoTextureLoader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/VideoTextureLoader.html)
+    - [XRARTracker](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRARTracker.html)
+    - [XRAssetLoad](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRAssetLoad.html)
+    - [XRAssetPostProcess](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRAssetPostProcess.html)
+    - [XRAssetRenderTexture](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRAssetRenderTexture.html)
+    - [XRAssets](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRAssets.html)
+    - [XRCamera](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRCamera.html)
+    - [XREnv](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XREnv.html)
+    - [XRGLTF](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRGLTF.html)
+    - [XRLight](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRLight.html)
+    - [XRMaterial](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRMaterial.html)
+    - [XRMesh](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRMesh.html)
+    - [XRNode](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRNode.html)
+    - [XRParticle](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRParticle.html)
+    - [XRShadow](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRShadow.html)
+    - [XRText](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/XRText.html)
+    - [Rigidbody](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/classes/Rigidbody.html)
+  - [Interfaces](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IComponentSchema.html)
+    - [IARRawData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IARRawData.html)
+    - [IARSystemData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IARSystemData.html)
+    - [IARTrackerData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IARTrackerData.html)
+    - [IARTrackerRawData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IARTrackerRawData.html)
+    - [IAnimationPlayOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAnimationPlayOptions.html)
+    - [IAnimationSystemData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAnimationSystemData.html)
+    - [IAnimatorAutoPlay](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAnimatorAutoPlay.html)
+    - [IAnimatorData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAnimatorData.html)
+    - [IAssetMaterialData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAssetMaterialData.html)
+    - [IAssetPostProcessData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAssetPostProcessData.html)
+    - [IAssetRenderTextureData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAssetRenderTextureData.html)
+    - [IAssetsData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAssetsData.html)
+    - [IAssetsSystemData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAssetsSystemData.html)
+    - [IAtlasCreationOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAtlasCreationOptions.html)
+    - [IAtlasLoaderOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAtlasLoaderOptions.html)
+    - [IAtlasOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAtlasOptions.html)
+    - [IAttachment](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IAttachment.html)
+    - [ICameraData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ICameraData.html)
+    - [ICameraOrbitControlData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ICameraOrbitControlData.html)
+    - [ICapsuleShapeData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ICapsuleShapeData.html)
+    - [IComponentSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IComponentSchema.html)
+    - [ICubeShapeData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ICubeShapeData.html)
+    - [ICubeTextureLoaderOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ICubeTextureLoaderOptions.html)
+    - [IDataValueHandler](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IDataValueHandler.html)
+    - [IDownloader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IDownloader.html)
+    - [IEffectAsset](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IEffectAsset.html)
+    - [IEngineSettings](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IEngineSettings.html)
+    - [IEntityComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IEntityComponents.html)
+    - [IEnvData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IEnvData.html)
+    - [IEnvDataLoaderOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IEnvDataLoaderOptions.html)
+    - [IEnvDataOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IEnvDataOptions.html)
+    - [IEventBridge](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IEventBridge.html)
+    - [IFeatures](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IFeatures.html)
+    - [IFontSetting](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IFontSetting.html)
+    - [IGLTFData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IGLTFData.html)
+    - [IGLTFLoaderOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IGLTFLoaderOptions.html)
+    - [IGLTFModelOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IGLTFModelOptions.html)
+    - [IGizmoSystemData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IGizmoSystemData.html)
+    - [IGlyphInfo](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IGlyphInfo.html)
+    - [IHandle](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IHandle.html)
+    - [IImage](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IImage.html)
+    - [IImageLoaderOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IImageLoaderOptions.html)
+    - [IKeyframeAnimationData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IKeyframeAnimationData.html)
+    - [IKeyframeAnimationInfo](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IKeyframeAnimationInfo.html)
+    - [IKeyframeAnimationOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IKeyframeAnimationOptions.html)
+    - [IKeyframeLoaderOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IKeyframeLoaderOptions.html)
+    - [ILightData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ILightData.html)
+    - [ILoaderOptionsSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ILoaderOptionsSchema.html)
+    - [ILongIntNativeMap](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ILongIntNativeMap.html)
+    - [IMeshData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IMeshData.html)
+    - [IMeshShapeData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IMeshShapeData.html)
+    - [INativeMap](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/INativeMap.html)
+    - [INodeSystemData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/INodeSystemData.html)
+    - [IParticleData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IParticleData.html)
+    - [IPhysicsSystemData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IPhysicsSystemData.html)
+    - [IPostProcessOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IPostProcessOptions.html)
+    - [IRawLoaderOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IRawLoaderOptions.html)
+    - [IRealDownloader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IRealDownloader.html)
+    - [IRect](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IRect.html)
+    - [IRenderPassDescriptor](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IRenderPassDescriptor.html)
+    - [IRenderStates](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IRenderStates.html)
+    - [IRenderSystemData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IRenderSystemData.html)
+    - [IRenderTarget](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IRenderTarget.html)
+    - [IRenderTextureOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IRenderTextureOptions.html)
+    - [IRigidbodyData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IRigidbodyData.html)
+    - [IShapeData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IShapeData.html)
+    - [IShapeDragEvent](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IShapeDragEvent.html)
+    - [IShapeGizmosData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IShapeGizmosData.html)
+    - [IShapeInteractData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IShapeInteractData.html)
+    - [IShapeTouchEvent](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IShapeTouchEvent.html)
+    - [IShareCaptureOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IShareCaptureOptions.html)
+    - [IShareSystemData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IShareSystemData.html)
+    - [ISphereShapeData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ISphereShapeData.html)
+    - [ISubMesh](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ISubMesh.html)
+    - [ITextData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ITextData.html)
+    - [ITextureLoaderOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ITextureLoaderOptions.html)
+    - [ITextureOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ITextureOptions.html)
+    - [ITextureWrapper](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ITextureWrapper.html)
+    - [ITickSystemData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ITickSystemData.html)
+    - [ITransformData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ITransformData.html)
+    - [IUniformDescriptorOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IUniformDescriptorOptions.html)
+    - [IVertexDataDescriptorOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IVertexDataDescriptorOptions.html)
+    - [IVertexLayoutOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IVertexLayoutOptions.html)
+    - [IVideoSystemData](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IVideoSystemData.html)
+    - [IVideoTextureLoaderOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IVideoTextureLoaderOptions.html)
+    - [IVideoTextureOptions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IVideoTextureOptions.html)
+    - [IView](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IView.html)
+    - [IViewAction](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IViewAction.html)
+    - [ICollideEvent](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/ICollideEvent.html)
+    - [IContactPoint](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IContactPoint.html)
+    - [IOverlapEvent](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/interfaces/IOverlapEvent.html)
+  - [Type](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#tcamerabackground)
+    - [RaycastDesc](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#RaycastDesc)
+    - [TCameraBackground](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#TCameraBackground)
+    - [TDirection](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#TDirection)
+    - [TEventCallback](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#TEventCallback)
+    - [TTrackMode](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#TTrackMode)
+    - [Texture](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#Texture)
+    - [UniformBlock](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#UniformBlock)
+    - [UniformDescriptor](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#UniformDescriptor)
+    - [VertexLayout](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#VertexLayout)
+  - [Variables](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#basicdatamapping)
+    - [ARSystemSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#ARSystemSchema)
+    - [ARTrackSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#ARTrackSchema)
+    - [ARTrackerDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#ARTrackerDataMapping)
+    - [ARTrackerDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#ARTrackerDefaultComponents)
+    - [AnimatorSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AnimatorSchema)
+    - [AssetLoadDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetLoadDataMapping)
+    - [AssetLoadSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetLoadSchema)
+    - [AssetMaterialDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetMaterialDataMapping)
+    - [AssetMaterialDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetMaterialDefaultComponents)
+    - [AssetMaterialSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetMaterialSchema)
+    - [AssetPostProcessDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetPostProcessDataMapping)
+    - [AssetPostProcessDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetPostProcessDefaultComponents)
+    - [AssetRenderTextureDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetRenderTextureDataMapping)
+    - [AssetRenderTextureDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetRenderTextureDefaultComponents)
+    - [AssetRenderTextureSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetRenderTextureSchema)
+    - [AssetsDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetsDefaultComponents)
+    - [AssetsSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#AssetsSchema)
+    - [BasicDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#BasicDataMapping)
+    - [BasicDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#BasicDefaultComponents)
+    - [CameraDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#CameraDataMapping)
+    - [CameraDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#CameraDefaultComponents)
+    - [CameraOrbitControlSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#CameraOrbitControlSchema)
+    - [CameraSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#CameraSchema)
+    - [CapsuleShapeSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#CapsuleShapeSchema)
+    - [CubeShapeSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#CubeShapeSchema)
+    - [EnvDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#EnvDataMapping)
+    - [EnvDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#EnvDefaultComponents)
+    - [EnvSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#EnvSchema)
+    - [GLTFDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#GLTFDataMapping)
+    - [GLTFDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#GLTFDefaultComponents)
+    - [GLTFSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#GLTFSchema)
+    - [LightDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#LightDataMapping)
+    - [LightDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#LightDefaultComponents)
+    - [LightSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#LightSchema)
+    - [MeshDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#MeshDataMapping)
+    - [MeshDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#MeshDefaultComponents)
+    - [MeshSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#MeshSchema)
+    - [MeshShapeSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#MeshShapeSchema)
+    - [NodeDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#NodeDataMapping)
+    - [NodeDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#NodeDefaultComponents)
+    - [ParticleDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#ParticleDataMapping)
+    - [ParticleDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#ParticleDefaultComponents)
+    - [ParticleSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#ParticleSchema)
+    - [RenderSystemSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#RenderSystemSchema)
+    - [RigidbodySchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#RigidbodySchema)
+    - [SceneDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#SceneDataMapping)
+    - [SceneDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#SceneDefaultComponents)
+    - [ShadowDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#ShadowDataMapping)
+    - [ShadowDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#ShadowDefaultComponents)
+    - [ShapeInteractSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#ShapeInteractSchema)
+    - [SphereShapeSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#SphereShapeSchema)
+    - [TextDataMapping](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#TextDataMapping)
+    - [TextDefaultComponents](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#TextDefaultComponents)
+    - [TextSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#TextSchema)
+    - [TransformSchema](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#TransformSchema)
+    - [noneParamsEaseFuncs](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#noneParamsEaseFuncs)
+    - [useParamsEaseFuncs](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#useParamsEaseFuncs)
+  - [Functions](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registercomponent)
+    - [isTextureWrapper](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#isTextureWrapper)
+    - [registerAssetLoader](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registerAssetLoader)
+    - [registerComponent](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registerComponent)
+    - [registerDataValue](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registerDataValue)
+    - [registerEffect](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registerEffect)
+    - [registerElement](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registerElement)
+    - [registerGeometry](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registerGeometry)
+    - [registerMaterial](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registerMaterial)
+    - [registerTexture](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registerTexture)
+    - [registerUniformDesc](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registerUniformDesc)
+    - [registerVertexDataDesc](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registerVertexDataDesc)
+    - [registerVertexLayout](https://developers.weixin.qq.com/miniprogram/dev/api/xr-frame/modules.html#registerVertexLayout)

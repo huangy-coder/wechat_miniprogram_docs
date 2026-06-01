@@ -3,9 +3,9 @@
 > 基础库 1.0.0 开始支持，低版本需做[兼容处理](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html)。
 
 > **微信 Windows 版**：支持
-> 
+>
 > **微信 Mac 版**：支持
-> 
+>
 > **微信 鸿蒙 OS 版**：支持
 
 渲染框架支持情况：WebView

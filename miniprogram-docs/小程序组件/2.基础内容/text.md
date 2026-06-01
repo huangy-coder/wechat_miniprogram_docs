@@ -15,7 +15,7 @@
 文本。
 
 1.  内联文本只能用 text 组件，不能用 view，如 <text> foo <text>bar</text> </text>
-    
+
 2.  新增 span 组件用于内联文本和图片，如 <span> <image> </image> <text>bar</text> </span>
 
 ## [#](https://developers.weixin.qq.com/miniprogram/dev/component/text.html#%E9%80%9A%E7%94%A8%E5%B1%9E%E6%80%A7) 通用属性

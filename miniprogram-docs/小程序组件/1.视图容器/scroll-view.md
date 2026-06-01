@@ -17,7 +17,7 @@
 可滚动视图区域。使用竖向滚动时，需要给[scroll-view](https://developers.weixin.qq.com/miniprogram/dev/component/scroll-view.html)一个固定高度，通过 WXSS 设置 height。组件属性的长度单位默认为px，[2.4.0](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html)起支持传入单位(rpx/px)。
 
 1.  横向滚动需打开 enable-flex 以兼容 WebView，如 <scroll-view scroll-x enable-flex style="flex-direction: row;"/>
-    
+
 2.  滚动条的长度是预估的，若直接子节点的高度差别较大，则滚动条长度可能会不准确
 3.  使用 `worklet` 函数需要开启开发者工具 "将 JS 编译成 ES5" 或 "编译 worklet 函数" 选项。
 

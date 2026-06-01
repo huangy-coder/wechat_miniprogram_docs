@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "preview-home": "./preview-home/index"
+  },
+  "componentFramework": "glass-easel"
+}
